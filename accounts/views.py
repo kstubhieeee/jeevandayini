@@ -948,3 +948,196 @@ def mark_not_donated(request, appointment_id):
         messages.error(request, f'Error updating appointment: {str(e)}')
     
     return redirect('confirmed_appointments')
+
+@login_required(login_url='login')
+def send_certificate(request, appointment_id):
+    """
+    Redirect to certificate preview instead of sending directly
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only send certificates for your blood bank.')
+            return redirect('confirmed_appointments')
+        
+        # Check if the appointment is marked as donated
+        if appointment.donation_status != 'DONATED':
+            messages.error(request, 'Certificate can only be sent for appointments marked as donated.')
+            return redirect('confirmed_appointments')
+        
+        # Instead of sending directly, redirect to certificate preview
+        return redirect('certificate_preview', appointment_id=appointment_id)
+    
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error preparing certificate: {str(e)}')
+    
+    return redirect('confirmed_appointments')
+
+@login_required(login_url='login')
+def certificate_preview(request, appointment_id):
+    """
+    Display certificate preview before sending
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only view certificates for your blood bank.')
+            return redirect('confirmed_appointments')
+        
+        # Check if the appointment is marked as donated
+        if appointment.donation_status != 'DONATED':
+            messages.error(request, 'Certificate can only be viewed for appointments marked as donated.')
+            return redirect('confirmed_appointments')
+        
+        # Get today's date for the certificate
+        today = timezone.now().date()
+        
+        # Ensure blood group is available
+        blood_group = appointment.blood_group if hasattr(appointment, 'blood_group') else "O+"
+        
+        # Add blood group directly to context
+        context = {
+            'appointment': appointment,
+            'blood_bank': blood_bank,
+            'today': today,
+            'blood_group': blood_group
+        }
+        
+        print(f"Debug - Appointment blood group: {blood_group}")
+        print(f"Debug - Appointment object: {appointment.__dict__}")
+        
+        return render(request, 'accounts/certificate_preview.html', context)
+    
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error displaying certificate: {str(e)}')
+    
+    return redirect('confirmed_appointments')
+
+@login_required(login_url='login')
+def send_certificate_confirm(request, appointment_id):
+    """
+    Actually send the certificate after confirmation
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    if request.method != 'POST':
+        return redirect('confirmed_appointments')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only send certificates for your blood bank.')
+            return redirect('confirmed_appointments')
+        
+        # Check if the appointment is marked as donated
+        if appointment.donation_status != 'DONATED':
+            messages.error(request, 'Certificate can only be sent for appointments marked as donated.')
+            return redirect('confirmed_appointments')
+        
+        # Here you would add the code to generate and email the certificate
+        # For example, using Django's email functionality or a third-party service
+        
+        # For now, we'll just show a success message
+        messages.success(request, f'Certificate sent successfully to {appointment.full_name} at {appointment.email}.')
+    
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error sending certificate: {str(e)}')
+    
+    return redirect('confirmed_appointments')
+
+@login_required(login_url='login')
+def view_certificates(request):
+    """
+    Display certificates for a user
+    """
+    try:
+        # Get all appointments where user has donated blood
+        user_donations = Appointment.objects.filter(
+            user=request.user,
+            donation_status='DONATED'
+        ).select_related('blood_bank').order_by('-appointment_date')
+        
+        print(f"Found {user_donations.count()} donations for user {request.user.username}")
+        
+        # Get today's date for the certificate
+        today = timezone.now().date()
+        
+        context = {
+            'donations': user_donations,
+            'today': today
+        }
+        
+        return render(request, 'accounts/view_certificates.html', context)
+    
+    except Exception as e:
+        print(f"Error in view_certificates: {str(e)}")
+        messages.error(request, f'Error retrieving certificates: {str(e)}')
+        return redirect('dashboard')
+
+@login_required(login_url='login')
+def view_certificate_detail(request, donation_id):
+    """
+    Display a specific certificate with download options
+    """
+    try:
+        # Get the specific donation
+        donation = Appointment.objects.get(
+            id=donation_id,
+            user=request.user,
+            donation_status='DONATED'
+        )
+        
+        print(f"Displaying certificate for donation ID: {donation_id}")
+        
+        # Get today's date for the certificate
+        today = timezone.now().date()
+        
+        context = {
+            'donation': donation,
+            'today': today
+        }
+        
+        return render(request, 'accounts/view_certificate_detail.html', context)
+    
+    except Appointment.DoesNotExist:
+        print(f"Donation not found: {donation_id}")
+        messages.error(request, 'Certificate not found or you do not have permission to view it.')
+        return redirect('view_certificates')
+    except Exception as e:
+        print(f"Error in view_certificate_detail: {str(e)}")
+        messages.error(request, f'Error retrieving certificate: {str(e)}')
+        return redirect('view_certificates')

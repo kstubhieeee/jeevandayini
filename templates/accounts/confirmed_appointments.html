@@ -199,6 +199,17 @@
             box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
         }
 
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #3a6a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(69, 123, 157, 0.2);
+        }
+
         .donation-status {
             padding: 0.6rem 1.2rem;
             border-radius: 25px;
@@ -480,12 +491,21 @@
                                             </button>
                                         </form>
                                         {% else %}
-                                        <form method="post" action="{% url 'mark_not_donated' appointment.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="action-btn no-donate-btn">
-                                                <i class="fas fa-times-circle"></i> Mark as Not Donated
-                                            </button>
-                                        </form>
+                                        <div class="d-flex">
+                                            <form method="post" action="{% url 'mark_not_donated' appointment.id %}"
+                                                class="me-2">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn no-donate-btn">
+                                                    <i class="fas fa-times-circle"></i> Mark as Not Donated
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{% url 'send_certificate' appointment.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="action-btn btn-primary">
+                                                    <i class="fas fa-certificate"></i> Send Certificate
+                                                </button>
+                                            </form>
+                                        </div>
                                         {% endif %}
                                     </div>
                                 </td>

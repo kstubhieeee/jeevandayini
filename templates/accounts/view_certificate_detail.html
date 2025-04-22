@@ -1,0 +1,354 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate - Jeevandayini</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@700&family=Merriweather:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #1d3557;
+            --accent-color: #457b9d;
+            --light-color: #f1faee;
+            --gold-color: #d4af37;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1000px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            background-color: #d12f3c;
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .btn-secondary-action {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary-action:hover {
+            background-color: #142a45;
+        }
+
+        .btn-canva {
+            background-color: #00c4cc;
+        }
+
+        .btn-canva:hover {
+            background-color: #00a6ad;
+        }
+
+        /* Certificate Styles */
+        .certificate-container {
+            background: #fff;
+            padding: 0;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .certificate {
+            padding: 50px;
+            background-color: #fff;
+            background-image:
+                radial-gradient(circle at top left, rgba(230, 57, 70, 0.05) 20%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(29, 53, 87, 0.05) 20%, transparent 40%);
+            border: 20px solid #f8f9fa;
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #e9ecef;
+            pointer-events: none;
+        }
+
+        .certificate-heading {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .certificate-subheading {
+            font-family: 'Dancing Script', cursive;
+            color: var(--primary-color);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .certificate-content {
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+        }
+
+        .certificate-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            display: block;
+            width: 70%;
+            margin: 0 auto 2rem;
+            padding: 0 1rem 0.5rem;
+        }
+
+        .certificate-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .certificate-date,
+        .certificate-signature {
+            text-align: center;
+            width: 35%;
+        }
+
+        .fake-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        .certificate-seal {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            width: 120px;
+            height: 120px;
+            background-image: url("{% static 'images/seal.png' %}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+        }
+
+        .date-line,
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .blood-group {
+            display: inline-block;
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0 0.3rem;
+        }
+
+        .certificate-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            color: #6c757d;
+        }
+
+        .certificate-id {
+            position: absolute;
+            bottom: 15px;
+            left: 50px;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .logo-center {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-center img {
+            height: 80px;
+            width: auto;
+        }
+
+        @media print {
+            .action-bar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .certificate {
+                padding: 30px;
+            }
+
+            .certificate-heading {
+                font-size: 2rem;
+            }
+
+            .certificate-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="action-bar">
+            <div>
+                <h4 class="mb-0">Your Blood Donation Certificate</h4>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-action" onclick="downloadPDF()">
+                    <i class="fas fa-download"></i> Download Certificate PDF
+                </button>
+                <a href="{% url 'view_certificates' %}" class="btn-action btn-secondary-action">
+                    <i class="fas fa-arrow-left"></i> Back to Certificates
+                </a>
+            </div>
+        </div>
+
+        <div class="certificate-container" id="certificate">
+            <div class="certificate">
+                <div class="logo-center">
+                    <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+                </div>
+                <h1 class="certificate-heading">CERTIFICATE OF APPRECIATION</h1>
+                <h2 class="certificate-subheading">Blood Donation</h2>
+
+                <div class="certificate-content">
+                    This is to certify that
+                </div>
+
+                <div class="certificate-name">
+                    {{ donation.full_name }}
+                </div>
+
+                <div class="certificate-content">
+                    has generously donated blood of group <span class="blood-group">{{ donation.blood_group }}</span>
+                    on {{ donation.appointment_date|date:"F d, Y" }} at {{ donation.blood_bank.name }}.
+                    <br><br>
+                    This noble act of kindness will help save lives and make a positive impact on our community.
+                    <br>
+                    Thank you for your invaluable contribution to humanity.
+                </div>
+
+                <div class="certificate-details">
+                    <div class="certificate-date">
+                        <div>{{ today|date:"F d, Y" }}</div>
+                        <div class="date-line"></div>
+                    </div>
+
+                    <div class="certificate-signature">
+                        <div class="fake-signature">{{ donation.blood_bank.name }}</div>
+                        <div class="signature-line"></div>
+                        <div>{{ donation.blood_bank.name }}</div>
+                        <div>Authorized Signatory</div>
+                    </div>
+                </div>
+
+                <div class="certificate-seal"></div>
+
+                <div class="certificate-id">Certificate ID: JDY-{{ donation.id }}-{{ today|date:"Ymd" }}
+                </div>
+
+                <div class="certificate-footer">
+                    Your act of blood donation has the power to save up to three lives. Thank you for your
+                    selfless contribution.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to download certificate as PDF
+        function downloadPDF() {
+            const element = document.getElementById('certificate');
+            const opt = {
+                margin: 0.5,
+                filename: 'Blood_Donation_Certificate_{{ donation.id }}.pdf',
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 3, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
+            };
+
+            // New Promise-based usage:
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</body>
+
+</html>

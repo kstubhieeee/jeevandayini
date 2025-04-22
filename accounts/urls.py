@@ -33,4 +33,7 @@ urlpatterns = [
     path('confirmed-appointments/', views.confirmed_appointments, name='confirmed_appointments'),
     path('appointment/mark-donated/<int:appointment_id>/', views.mark_donated, name='mark_donated'),
     path('appointment/mark-not-donated/<int:appointment_id>/', views.mark_not_donated, name='mark_not_donated'),
+    path('appointment/send-certificate/<int:appointment_id>/', views.send_certificate, name='send_certificate'),
+    path('view-certificates/', views.view_certificates, name='view_certificates'),
+    path('view-certificate/<int:donation_id>/', views.view_certificate_detail, name='view_certificate_detail'),
 ] 

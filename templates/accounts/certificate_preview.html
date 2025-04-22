@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Donation Certificate - Jeevandayini</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Dancing+Script:wght@700&family=Merriweather:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #1d3557;
+            --accent-color: #457b9d;
+            --light-color: #f1faee;
+            --gold-color: #d4af37;
+        }
+
+        body {
+            font-family: "Merriweather", serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo img {
+            height: 50px;
+            width: auto;
+            margin-right: 1rem;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .navbar .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            padding: 2rem;
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 1rem;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .send-btn:hover {
+            background-color: #d12f3c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(230, 57, 70, 0.2);
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.2);
+        }
+
+        /* Certificate Styles */
+        .certificate-container {
+            background: #fff;
+            padding: 0;
+            position: relative;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .certificate {
+            padding: 50px;
+            background-color: #fff;
+            background-image:
+                radial-gradient(circle at top left, rgba(230, 57, 70, 0.05) 20%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(29, 53, 87, 0.05) 20%, transparent 40%);
+            border: 20px solid #f8f9fa;
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #e9ecef;
+            pointer-events: none;
+        }
+
+        .certificate-heading {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .certificate-subheading {
+            font-family: 'Dancing Script', cursive;
+            color: var(--primary-color);
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .certificate-content {
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            padding: 0 2rem;
+        }
+
+        .certificate-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--gold-color);
+            display: block;
+            width: 70%;
+            margin: 0 auto 2rem;
+            padding: 0 1rem 0.5rem;
+        }
+
+        .certificate-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .certificate-date,
+        .certificate-signature {
+            text-align: center;
+            width: 35%;
+        }
+
+        .certificate-signature img {
+            max-width: 120px;
+            margin-bottom: 0.5rem;
+        }
+
+        .fake-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        .certificate-seal {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            width: 120px;
+            height: 120px;
+            background-image: url("{% static 'images/seal.png' %}");
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.8;
+        }
+
+        .date-line,
+        .signature-line {
+            border-top: 1px solid #000;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .blood-group {
+            display: inline-block;
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0 0.3rem;
+        }
+
+        .certificate-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            color: #6c757d;
+        }
+
+        .certificate-id {
+            position: absolute;
+            bottom: 15px;
+            left: 50px;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .logo-center {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-center img {
+            height: 80px;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+            <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
+        </div>
+        <div class="navbar-links">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-home me-2"></i>Home
+            </a>
+            <a href="{% url 'blood_bank_dashboard' %}" class="btn btn-outline-primary">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </a>
+            <a href="{% url 'confirmed_appointments' %}" class="btn btn-outline-primary">
+                <i class="fas fa-heartbeat me-2"></i>Confirmed Donations
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i
+                    class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-certificate me-2"></i>Certificate Preview</h3>
+                    <a href="{% url 'confirmed_appointments' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Donations
+                    </a>
+                </div>
+
+                <div class="certificate-container">
+                    <div class="certificate">
+                        <div class="logo-center">
+                            <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+                        </div>
+                        <h1 class="certificate-heading">CERTIFICATE OF APPRECIATION</h1>
+                        <h2 class="certificate-subheading">Blood Donation</h2>
+
+                        <div class="certificate-content">
+                            This is to certify that
+                        </div>
+
+                        <div class="certificate-name">
+                            {{ appointment.full_name }}
+                        </div>
+
+                        <div class="certificate-content">
+                            has generously donated blood of group <span class="blood-group">{{ blood_group }}</span>
+                            on {{ appointment.appointment_date|date:"F d, Y" }} at {{ blood_bank.name }}.
+                            <br><br>
+                            This noble act of kindness will help save lives and make a positive impact on our community.
+                            <br>
+                            Thank you for your invaluable contribution to humanity.
+                        </div>
+
+                        <div class="certificate-details">
+                            <div class="certificate-date">
+                                <div>{{ today|date:"F d, Y" }}</div>
+                                <div class="date-line"></div>
+                            </div>
+
+                            <div class="certificate-signature">
+                                <div class="fake-signature">Borivali Blood Bank</div>
+                                <div class="signature-line"></div>
+                                <div>{{ blood_bank.name }}</div>
+                                <div>Authorized Signatory</div>
+                            </div>
+                        </div>
+
+                        <div class="certificate-seal"></div>
+
+                        <div class="certificate-id">Certificate ID: JDY-{{ appointment.id }}-{{ today|date:"Ymd" }}
+                        </div>
+
+                        <div class="certificate-footer">
+                            Your act of blood donation has the power to save up to three lives. Thank you for your
+                            selfless contribution.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <h4 class="mb-4">Would you like to send this certificate to {{ appointment.full_name }}?</h4>
+                    <p class="mb-4">The certificate will be sent to: <strong>{{ appointment.email }}</strong></p>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <form method="post" action="{% url 'send_certificate_confirm' appointment.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn send-btn">
+                                <i class="fas fa-paper-plane"></i> Send Certificate
+                            </button>
+                        </form>
+
+                        <a href="{% url 'confirmed_appointments' %}" class="action-btn cancel-btn">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -588,6 +588,7 @@
       {% if user.is_authenticated %}
       <a href="{% url 'blood_availability' %}"><i class="fas fa-search"></i> LOOKING FOR BLOOD</a>
       <a href="{% url 'type_donation' %}"><i class="fas fa-tint"></i> WANT TO DONATE BLOOD</a>
+      <a href="{% url 'view_certificates' %}"><i class="fas fa-certificate"></i> VIEW CERTIFICATES</a>
       {% if user.is_staff %}
       <a href="{% url 'blood_bank_login' %}" class="navbar-btn"><i class="fas fa-hospital-user"></i> BLOOD BANK
         LOGIN</a>

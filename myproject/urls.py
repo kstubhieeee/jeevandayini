@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login_view, name='login'),  # Make login the main landing page
     path('accounts/', include('accounts.urls')),
+    path('bloodbank/', include('bloodbank.urls')),  # Include bloodbank URLs
 ]
