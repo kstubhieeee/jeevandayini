@@ -1,0 +1,16 @@
+Django==4.2.3
+Pillow==10.0.0
+django-crispy-forms==2.0
+crispy-bootstrap5==0.7
+python-dateutil==2.8.2
+reportlab==3.6.12
+django-widget-tweaks==1.4.12
+django-allauth==0.54.0
+whitenoise==6.5.0
+gunicorn==20.1.0
+djangorestframework==3.14.0
+markdown==3.4.3
+django-filter==23.2
+django-environ==0.10.0
+six==1.16.0
+django-extensions==3.2.3 
