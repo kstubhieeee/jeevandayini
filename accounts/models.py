@@ -299,6 +299,11 @@ class Appointment(models.Model):
         ('CANCELLED', 'Cancelled')
     ]
 
+    DONATION_STATUS_CHOICES = [
+        ('NOT_DONATED', 'Not Donated'),
+        ('DONATED', 'Donated')
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')
     blood_bank = models.ForeignKey(BloodBank, on_delete=models.CASCADE, related_name='appointments')
     appointment_date = models.DateField()
@@ -328,6 +333,7 @@ class Appointment(models.Model):
     previous_donation = models.DateField(null=True, blank=True, help_text="Date of last blood donation, if any")
     medical_conditions = models.TextField(blank=True, help_text="List any medical conditions or medications")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    donation_status = models.CharField(max_length=15, choices=DONATION_STATUS_CHOICES, default='NOT_DONATED')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -341,10 +347,6 @@ class Appointment(models.Model):
         unique_together = ['blood_bank', 'appointment_date', 'appointment_time']
 
     def clean(self):
-        # Validate appointment date is not in the past
-        if self.appointment_date and self.appointment_date < timezone.now().date():
-            raise ValidationError({'appointment_date': 'Appointment date cannot be in the past.'})
-        
         # Validate previous donation date is not in the future
         if self.previous_donation and self.previous_donation > timezone.now().date():
             raise ValidationError({'previous_donation': 'Previous donation date cannot be in the future.'})
@@ -359,7 +361,9 @@ class Appointment(models.Model):
                 raise ValidationError({'appointment_time': 'This time slot is already booked.'})
 
     def save(self, *args, **kwargs):
-        self.full_clean()
+        bypass_validation = kwargs.pop('bypass_validation', False)
+        if not bypass_validation:
+            self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self):

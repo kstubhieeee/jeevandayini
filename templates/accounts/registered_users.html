@@ -121,6 +121,36 @@
       font-weight: 600;
     }
 
+    .status-badge {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      min-width: 100px;
+      display: inline-block;
+    }
+
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .status-confirmed {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-cancelled {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+    }
+
+    .status-completed {
+      background-color: rgba(13, 110, 253, 0.1);
+      color: #0d6efd;
+    }
+
     .contact-link {
       color: var(--accent-color);
       text-decoration: none;
@@ -168,7 +198,7 @@
       <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
     </div>
     <div>
-      <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+      <a href="{% url 'blood_bank_dashboard' %}" class="btn btn-outline-secondary">
         <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
       </a>
     </div>
@@ -176,6 +206,22 @@
 
   <div class="container">
     <div class="main-card">
+      <!-- Messages display section -->
+      {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+        <div
+          class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+          role="alert">
+          <i
+            class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} me-2"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
       <div class="page-header">
         <div>
           <h2 class="page-title">
@@ -203,6 +249,7 @@
               <th><i class="fas fa-clock me-2"></i>Preferred Time</th>
               <th><i class="fas fa-tint me-2"></i>Blood Group</th>
               <th><i class="fas fa-envelope me-2"></i>Contact</th>
+              <th><i class="fas fa-info-circle me-2"></i>Status</th>
               <th><i class="fas fa-cog me-2"></i>Actions</th>
             </tr>
           </thead>
@@ -242,13 +289,22 @@
                 </a>
               </td>
               <td>
+                <span class="status-badge status-{{ appointment.status|lower }}">
+                  {{ appointment.status }}
+                </span>
+              </td>
+              <td>
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-success" title="Approve">
+                  <a href="{% url 'accept_appointment' appointment.id %}"
+                    class="btn btn-sm btn-outline-success {% if appointment.status == 'CONFIRMED' %}disabled{% endif %}"
+                    title="Approve">
                     <i class="fas fa-check"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger" title="Reject">
+                  </a>
+                  <a href="{% url 'reject_appointment' appointment.id %}"
+                    class="btn btn-sm btn-outline-danger {% if appointment.status == 'CANCELLED' %}disabled{% endif %}"
+                    title="Reject">
                     <i class="fas fa-times"></i>
-                  </button>
+                  </a>
                   <button class="btn btn-sm btn-outline-primary" title="Edit">
                     <i class="fas fa-edit"></i>
                   </button>
@@ -270,6 +326,22 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        const alerts = document.querySelectorAll(".alert");
+        alerts.forEach(function (alert) {
+          alert.style.opacity = "0";
+          alert.style.transition = "opacity 0.5s ease";
+          setTimeout(function () {
+            alert.remove();
+          }, 500);
+        });
+      }, 5000);
+    });
+  </script>
 </body>
 
 </html>

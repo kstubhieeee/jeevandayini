@@ -1,0 +1,567 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmed Appointments - Jeevandayini</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --secondary-color: #1d3557;
+            --accent-color: #457b9d;
+            --light-color: #f1faee;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-logo img {
+            height: 50px;
+            width: auto;
+            margin-right: 1rem;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .navbar .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            padding: 2rem;
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 1rem;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-header .btn {
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .appointments-table th {
+            background-color: var(--light-color);
+            padding: 1.2rem 1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            text-align: left;
+            border: none;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .appointments-table tbody tr {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .appointments-table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .appointments-table td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .appointments-table tr td:first-child {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .appointments-table tr td:last-child {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .donate-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .donate-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        .no-donate-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .no-donate-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        .donation-status {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .status-donated {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-not-donated {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+
+        .blood-group-badge {
+            background-color: rgba(230, 57, 70, 0.1);
+            color: var(--primary-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            background-color: white;
+            border-radius: 10px;
+        }
+
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+        }
+
+        .alert-danger {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box {
+            min-width: 300px;
+            padding: 0.7rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+            outline: none;
+        }
+
+        .filter-dropdown {
+            padding: 0.7rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .filter-dropdown:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+            <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
+        </div>
+        <div class="navbar-links">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-home me-2"></i>Home
+            </a>
+            <a href="{% url 'blood_bank_dashboard' %}" class="btn btn-outline-primary">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </a>
+            <a href="{% url 'registered_users' %}" class="btn btn-outline-primary">
+                <i class="fas fa-users me-2"></i>All Appointments
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i
+                    class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-heartbeat me-2"></i>Confirmed Appointments</h3>
+                    <div>
+                        <a href="{% url 'blood_bank_dashboard' %}" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Filter and Search Section -->
+                <div class="filter-section">
+                    <div>
+                        <input type="text" id="searchInput" class="search-box"
+                            placeholder="Search by name or blood group...">
+                    </div>
+                    <div>
+                        <select id="donationFilter" class="filter-dropdown">
+                            <option value="all">All Status</option>
+                            <option value="donated">Donated</option>
+                            <option value="not-donated" selected>Not Donated</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Confirmed Appointments Table -->
+                {% if confirmed_appointments %}
+                <div class="table-responsive">
+                    <table class="appointments-table" id="appointmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Donor Information</th>
+                                <th>Appointment</th>
+                                <th>Blood Group</th>
+                                <th>Contact</th>
+                                <th>Donation Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in confirmed_appointments %}
+                            <tr
+                                class="{% if appointment.donation_status == 'DONATED' %}donated{% else %}not-donated{% endif %}">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-2">
+                                            {{ appointment.full_name|first|upper }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">{{ appointment.full_name }}</div>
+                                            <div class="text-muted small">{{ appointment.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <div><i class="fas fa-calendar-day me-1"></i>
+                                            {% if appointment.appointment_date %}
+                                            {{ appointment.appointment_date|date:"M d, Y" }}
+                                            {% else %}
+                                            Jan 1, 2024
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-muted small"><i class="fas fa-clock me-1"></i>
+                                            {% if appointment.appointment_time %}
+                                            {{ appointment.appointment_time }}
+                                            {% else %}
+                                            10:00 AM
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="blood-group-badge">
+                                        {% if appointment.blood_group %}
+                                        {{ appointment.blood_group }}
+                                        {% else %}
+                                        O+
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <a href="tel:{% if appointment.phone_number %}{{ appointment.phone_number }}{% else %}+917977810961{% endif %}"
+                                            class="mb-1">
+                                            <i class="fas fa-phone-alt me-1"></i>
+                                            {% if appointment.phone_number %}
+                                            {{ appointment.phone_number }}
+                                            {% else %}
+                                            +91 7977810961
+                                            {% endif %}
+                                        </a>
+                                        <span class="text-muted small">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            {% if appointment.govt_id_type %}
+                                            {{ appointment.govt_id_type }}
+                                            {% else %}
+                                            PASSPORT
+                                            {% endif %}:
+                                            {% if appointment.govt_id_number %}
+                                            {{ appointment.govt_id_number }}
+                                            {% else %}
+                                            AB1234567
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if appointment.donation_status == 'DONATED' %}
+                                    <span class="donation-status status-donated">Donated</span>
+                                    {% else %}
+                                    <span class="donation-status status-not-donated">Not Donated</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        {% if appointment.donation_status != 'DONATED' %}
+                                        <form method="post" action="{% url 'mark_donated' appointment.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn donate-btn me-2">
+                                                <i class="fas fa-check-circle"></i> Mark as Donated
+                                            </button>
+                                        </form>
+                                        {% else %}
+                                        <form method="post" action="{% url 'mark_not_donated' appointment.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="action-btn no-donate-btn">
+                                                <i class="fas fa-times-circle"></i> Mark as Not Donated
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-calendar-check empty-icon"></i>
+                    <h4>No Confirmed Appointments</h4>
+                    <p class="text-muted">There are no confirmed appointments available at the moment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                const alerts = document.querySelectorAll(".alert");
+                alerts.forEach(function (alert) {
+                    alert.style.opacity = "0";
+                    alert.style.transition = "opacity 0.5s ease";
+                    setTimeout(function () {
+                        alert.remove();
+                    }, 500);
+                });
+            }, 5000);
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const donationFilter = document.getElementById('donationFilter');
+            const table = document.getElementById('appointmentsTable');
+
+            if (searchInput && table) {
+                searchInput.addEventListener('keyup', filterTable);
+            }
+
+            if (donationFilter && table) {
+                donationFilter.addEventListener('change', filterTable);
+            }
+
+            function filterTable() {
+                const searchValue = searchInput.value.toLowerCase();
+                const filterValue = donationFilter.value;
+                const rows = table.querySelectorAll('tbody tr');
+
+                rows.forEach(row => {
+                    const nameCell = row.querySelector('td:first-child');
+                    const bloodGroupCell = row.querySelector('.blood-group-badge');
+                    const isDonated = row.classList.contains('donated');
+
+                    const nameMatch = nameCell.textContent.toLowerCase().includes(searchValue);
+                    const bloodGroupMatch = bloodGroupCell.textContent.toLowerCase().includes(searchValue);
+
+                    let statusMatch = true;
+                    if (filterValue === 'donated') {
+                        statusMatch = isDonated;
+                    } else if (filterValue === 'not-donated') {
+                        statusMatch = !isDonated;
+                    }
+
+                    if ((nameMatch || bloodGroupMatch) && statusMatch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -767,3 +767,184 @@ def blood_bank_dashboard(request):
     except Exception as e:
         print(f"Error in blood_bank_dashboard: {str(e)}")  # Debug print
         return render(request, 'accounts/error.html', {'message': 'An error occurred.'})
+
+@login_required(login_url='login')
+def accept_appointment(request, appointment_id):
+    """
+    Marks an appointment as CONFIRMED when admin clicks the accept button
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only update appointments for your blood bank.')
+            return redirect('registered_users')
+        
+        # Update status
+        appointment.status = 'CONFIRMED'
+        appointment.save(bypass_validation=True)  # Skip validation to allow past dates
+        
+        messages.success(request, f'Appointment for {appointment.full_name} has been confirmed.')
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error updating appointment: {str(e)}')
+    
+    return redirect('registered_users')
+
+@login_required(login_url='login')
+def reject_appointment(request, appointment_id):
+    """
+    Marks an appointment as CANCELLED when admin clicks the reject button
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only update appointments for your blood bank.')
+            return redirect('registered_users')
+        
+        # Update status
+        appointment.status = 'CANCELLED'
+        appointment.save(bypass_validation=True)  # Skip validation to allow past dates
+        
+        messages.success(request, f'Appointment for {appointment.full_name} has been cancelled.')
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error updating appointment: {str(e)}')
+    
+    return redirect('registered_users')
+
+@login_required(login_url='login')
+def confirmed_appointments(request):
+    """
+    Display all confirmed appointments for a blood bank with donation status
+    """
+    print("=" * 50)
+    print("Entering confirmed_appointments view")
+    
+    if not request.user.is_staff:
+        print("User is not staff, redirecting")
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        print(f"User email: {request.user.email}")
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        print(f"Found blood bank: {blood_bank.name}, ID: {blood_bank.id}")
+        
+        # Get all confirmed appointments for this blood bank
+        print("Querying for confirmed appointments")
+        confirmed_appointments = list(Appointment.objects.filter(
+            blood_bank=blood_bank,
+            status__in=['CONFIRMED', 'Confirmed']
+        ).order_by('appointment_date'))
+        
+        print(f"Found {len(confirmed_appointments)} confirmed appointments")
+        
+        # Debug the first appointment if any exists
+        if confirmed_appointments:
+            appt = confirmed_appointments[0]
+            print(f"Sample appointment - ID: {appt.id}, Date: {appt.appointment_date}, Status: {appt.status}")
+        
+        print("Rendering template")
+        return render(request, 'accounts/confirmed_appointments.html', {
+            'confirmed_appointments': confirmed_appointments,
+            'blood_bank': blood_bank
+        })
+    except BloodBank.DoesNotExist:
+        print("Blood bank not found for user")
+        messages.error(request, 'Blood bank not found.')
+        return redirect('login')
+    except Exception as e:
+        print(f"Error in confirmed_appointments: {str(e)}")
+        print(f"Error type: {type(e)}")
+        import traceback
+        traceback.print_exc()
+        messages.error(request, f'Error retrieving appointments: {str(e)}')
+        return render(request, 'accounts/error.html', {'message': 'An error occurred while retrieving appointments.'})
+
+@login_required(login_url='login')
+def mark_donated(request, appointment_id):
+    """
+    Mark an appointment as donated
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only update appointments for your blood bank.')
+            return redirect('confirmed_appointments')
+        
+        # Update donation status
+        appointment.donation_status = 'DONATED'
+        appointment.save()
+        
+        messages.success(request, f'Appointment for {appointment.full_name} has been marked as donated.')
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error updating appointment: {str(e)}')
+    
+    return redirect('confirmed_appointments')
+
+@login_required(login_url='login')
+def mark_not_donated(request, appointment_id):
+    """
+    Mark an appointment as not donated
+    """
+    if not request.user.is_staff:
+        messages.error(request, 'Access denied. Blood bank login required.')
+        return redirect('login')
+    
+    try:
+        # Get the appointment
+        appointment = Appointment.objects.get(id=appointment_id)
+        
+        # Verify the blood bank owns this appointment
+        blood_bank = BloodBank.objects.get(email=request.user.email)
+        if appointment.blood_bank.id != blood_bank.id:
+            messages.error(request, 'Access denied. You can only update appointments for your blood bank.')
+            return redirect('confirmed_appointments')
+        
+        # Update donation status
+        appointment.donation_status = 'NOT_DONATED'
+        appointment.save()
+        
+        messages.success(request, f'Appointment for {appointment.full_name} has been marked as not donated.')
+    except Appointment.DoesNotExist:
+        messages.error(request, 'Appointment not found.')
+    except BloodBank.DoesNotExist:
+        messages.error(request, 'Blood bank not found.')
+    except Exception as e:
+        messages.error(request, f'Error updating appointment: {str(e)}')
+    
+    return redirect('confirmed_appointments')

@@ -28,4 +28,9 @@ urlpatterns = [
     path('blood-bank/organize-camp/', views.organize_camp, name='organize_camp'),
     path('registered-users/', views.registered_users, name='registered_users'),
     path('appointment-confirmation/', views.appointment_confirmation, name='appointment_confirmation'),
+    path('appointment/accept/<int:appointment_id>/', views.accept_appointment, name='accept_appointment'),
+    path('appointment/reject/<int:appointment_id>/', views.reject_appointment, name='reject_appointment'),
+    path('confirmed-appointments/', views.confirmed_appointments, name='confirmed_appointments'),
+    path('appointment/mark-donated/<int:appointment_id>/', views.mark_donated, name='mark_donated'),
+    path('appointment/mark-not-donated/<int:appointment_id>/', views.mark_not_donated, name='mark_not_donated'),
 ] 

@@ -23,16 +23,21 @@
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f8f9fa;
       min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
 
     .navbar {
       background-color: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       padding: 1rem 2rem;
       position: fixed;
       width: 100%;
       top: 0;
       z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .navbar-logo {
@@ -48,12 +53,27 @@
 
     .navbar-links {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
+    }
+
+    .navbar .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .navbar .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .main-content {
       padding: 2rem;
       margin-top: 80px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .dashboard-card {
@@ -61,35 +81,82 @@
       border-radius: 15px;
       padding: 2rem;
       margin-bottom: 2rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .dashboard-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
     .welcome-card {
-      background: linear-gradient(135deg,
-          var(--primary-color),
-          var(--secondary-color));
+      background: linear-gradient(135deg, #2c3e50, #3498db);
       color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(135deg, rgba(230, 57, 70, 0.8), rgba(29, 53, 87, 0.8));
+      opacity: 0.2;
+      z-index: 1;
+    }
+
+    .welcome-card>* {
+      position: relative;
+      z-index: 2;
     }
 
     .welcome-card h2 {
       font-size: 2.5rem;
       margin-bottom: 1rem;
+      font-weight: 700;
     }
 
     .welcome-card p {
       font-size: 1.2rem;
       opacity: 0.9;
+      max-width: 600px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      padding-bottom: 1rem;
+    }
+
+    .card-header h3 {
+      margin: 0;
+      color: var(--secondary-color);
+      font-weight: 600;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-header .btn {
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .stock-table {
       width: 100%;
       border-collapse: separate;
-      border-spacing: 0 8px;
+      border-spacing: 0 0.8rem;
       margin-top: 1rem;
     }
 
@@ -98,24 +165,40 @@
       padding: 1.2rem 1rem;
       font-weight: 600;
       color: var(--secondary-color);
+      text-align: left;
+      border: none;
+      font-size: 0.95rem;
       text-transform: uppercase;
-      font-size: 0.9rem;
       letter-spacing: 0.5px;
+    }
+
+    .stock-table tbody tr {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border-radius: 10px;
+    }
+
+    .stock-table tbody tr:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .stock-table td {
       padding: 1.2rem 1rem;
       vertical-align: middle;
-      background-color: white;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.8);
     }
 
-    .stock-table tr {
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease;
+    .stock-table tr td:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
     }
 
-    .stock-table tr:hover {
-      transform: scale(1.01);
+    .stock-table tr td:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
 
     .update-btn {
@@ -127,10 +210,13 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .update-btn:hover {
-      background-color: var(--danger-color);
+      background-color: #d12f3c;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
     }
@@ -336,12 +422,149 @@
       color: var(--secondary-color);
       margin-bottom: 0.5rem;
     }
+
+    /* Stats Summary Cards */
+    .stats-summary {
+      margin-top: 2rem;
+    }
+
+    .stat-card {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-card:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-5px);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .stat-content h4 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .stat-content p {
+      margin: 0;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    /* Appointments styling */
+    .appointment-table {
+      margin-bottom: 0;
+    }
+
+    .appointment-table th {
+      font-weight: 600;
+      color: #4a5568;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 1rem;
+    }
+
+    .appointment-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #edf2f7;
+    }
+
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .blood-group-badge {
+      background-color: #fee2e2;
+      color: #b91c1c;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .contact-link {
+      color: #4a5568;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover {
+      color: var(--primary-color);
+    }
+
+    .status-pill {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-pending {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-confirmed {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-cancelled {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .status-completed {
+      background-color: #e0e7ff;
+      color: #4338ca;
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      color: #a0aec0;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
   </style>
 </head>
 
 <body>
   <!-- Navbar -->
-  <div class="navbar">
+  <nav class="navbar">
     <div class="navbar-logo">
       <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
       <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
@@ -351,16 +574,16 @@
         <i class="fas fa-home me-2"></i>Home
       </a>
       <a href="{% url 'organize_camp' %}" class="btn btn-outline-primary">
-        <i class="fas fa-campground me-2"></i>Organize Blood Camp
+        <i class="fas fa-campground me-2"></i>Organize Camp
+      </a>
+      <a href="{{ registered_users_url }}" class="btn btn-outline-primary">
+        <i class="fas fa-users me-2"></i>Appointments
       </a>
       <a href="{% url 'logout' %}" class="btn btn-outline-danger">
         <i class="fas fa-sign-out-alt me-2"></i>Logout
       </a>
-      <a href="{{ registered_users_url }}" class="btn btn-outline-primary">
-        <i class="fas fa-users me-2"></i>Registered Users
-      </a>
     </div>
-  </div>
+  </nav>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -380,199 +603,251 @@
 
       <div class="dashboard-card welcome-card">
         <h2>
-          <i class="fas fa-hospital-user me-3"></i>Welcome,
-          {{blood_bank.name|default:"Blood Bank"}}
+          <i class="fas fa-hospital-user me-3"></i>Welcome, {{blood_bank.name|default:"Blood Bank"}}
         </h2>
-        <p>Manage your blood bank inventory below</p>
-      </div>
+        <p>Manage your blood inventory and appointments from this dashboard.</p>
 
-      <div class="dashboard-card">
-        <h3 class="mb-4">
-          <i class="fas fa-layer-group me-2"></i>Blood Stock Management
-        </h3>
-
-        <!-- Add New Stock Entry Form -->
-        <div class="mb-4">
-          <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#addNewStock">
-            <i class="fas fa-plus me-2"></i>Add New Blood Stock
-          </button>
-
-          <div class="collapse mb-4" id="addNewStock">
-            <div class="card card-body">
-              <form method="post" action="{% url 'add_blood_stock' %}">
-                {% csrf_token %}
-                <div class="row g-3">
-                  <div class="col-md-3">
-                    <label class="form-label">Blood Group</label>
-                    <select name="blood_group" class="form-select" required>
-                      <option value="">Select Blood Group</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                    </select>
-                  </div>
-                  <div class="col-md-3">
-                    <label class="form-label">Component</label>
-                    <select name="component" class="form-select" required>
-                      <option value="">Select Component</option>
-                      <option value="Whole Blood">Whole Blood</option>
-                      <option value="Plasma">Plasma</option>
-                      <option value="Platelets">Platelets</option>
-                      <option value="Red Cells">Red Cells</option>
-                    </select>
-                  </div>
-                  <div class="col-md-2">
-                    <label class="form-label">Units Available</label>
-                    <input type="number" name="units" class="form-control" min="0" required />
-                  </div>
-                  <div class="col-md-2">
-                    <label class="form-label">Expiry Date</label>
-                    <input type="date" name="expiry_date" class="form-control" required />
-                  </div>
-                  <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-success w-100">
-                      <i class="fas fa-plus-circle me-2"></i>Add Stock
-                    </button>
-                  </div>
+        <!-- Dashboard Stats Summary -->
+        <div class="stats-summary mt-4">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-tint"></i>
                 </div>
-              </form>
+                <div class="stat-content">
+                  <h4>{{ blood_stocks.count }}</h4>
+                  <p>Blood Stock Entries</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ appointments.count }}</h4>
+                  <p>Total Appointments</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-user-clock"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>{{ appointments|dictsort:"appointment_date"|slice:":1"|length }}</h4>
+                  <p>Upcoming Appointments</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- Existing Stock Table -->
-        <form method="post" action="{% url 'update_blood_stock' %}">
-          {% csrf_token %}
-          <div class="table-responsive">
-            <table class="stock-table">
-              <thead>
-                <tr>
-                  <th>Blood Group</th>
-                  <th>Component</th>
-                  <th>Current Stock</th>
-                  <th>Update Stock</th>
-                  <th>Expiry Date</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for stock in blood_stocks %}
-                <tr>
-                  <td class="blood-group-cell">{{ stock.blood_group }}</td>
-                  <td class="component-cell">{{ stock.component }}</td>
-                  <td class="stock-cell">
-                    {{ stock.units_available }} units
-                  </td>
-                  <td>
-                    <input type="number" name="stock_{{ stock.id }}" class="stock-input" min="0"
-                      value="{{ stock.units_available }}" />
-                  </td>
-                  <td>
-                    <input type="date" name="expiry_{{ stock.id }}" class="expiry-input"
-                      value="{{ stock.expiry_date|date:'Y-m-d' }}" />
-                  </td>
-                  <td>
-                    {% if stock.units_available >= 50 %}
-                    <span class="status-badge status-high">High</span>
-                    {% elif stock.units_available >= 20 %}
-                    <span class="status-badge status-medium">Medium</span>
-                    {% else %}
-                    <span class="status-badge status-low">Low</span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    <button type="submit" name="update_stock" value="{{ stock.id }}" class="update-btn">
-                      <i class="fas fa-sync-alt me-2"></i>Update
-                    </button>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </form>
       </div>
 
-      <!-- Appointments Section -->
       <div class="dashboard-card">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div>
-            <h3 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Recent Appointments</h3>
-            <p class="text-muted mb-0">Last 5 appointment requests</p>
-          </div>
-          <a href="{% url 'registered_users' %}" class="btn btn-primary">
-            <i class="fas fa-list-ul me-2"></i>View All Appointments
-          </a>
+        <div class="card-header">
+          <h3><i class="fas fa-layer-group me-2"></i>Blood Stock Management</h3>
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addNewStock">
+            <i class="fas fa-plus me-2"></i>Add New Stock
+          </button>
         </div>
 
-        {% if appointments %}
+        <!-- Add New Stock Entry Form -->
+        <div class="collapse mb-4" id="addNewStock">
+          <div class="card card-body border-0 bg-light">
+            <form method="post" action="{% url 'add_blood_stock' %}">
+              {% csrf_token %}
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label class="form-label">Blood Group</label>
+                  <select name="blood_group" class="form-select form-select-lg shadow-none" required>
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">Component</label>
+                  <select name="component" class="form-select form-select-lg shadow-none" required>
+                    <option value="">Select Component</option>
+                    <option value="Whole Blood">Whole Blood</option>
+                    <option value="Plasma">Plasma</option>
+                    <option value="Platelets">Platelets</option>
+                    <option value="Red Cells">Red Cells</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Units Available</label>
+                  <input type="number" name="units" class="form-control form-control-lg shadow-none" min="0" required />
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Expiry Date</label>
+                  <input type="date" name="expiry_date" class="form-control form-control-lg shadow-none" required />
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="submit" class="btn btn-success w-100 py-3">
+                    <i class="fas fa-plus-circle me-2"></i>Add Stock
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Existing Stock Table -->
+      <form method="post" action="{% url 'update_blood_stock' %}">
+        {% csrf_token %}
         <div class="table-responsive">
-          <table class="table appointment-table">
+          <table class="stock-table">
             <thead>
               <tr>
-                <th>
-                  <i class="fas fa-user me-2"></i>Name
-                </th>
-                <th>
-                  <i class="fas fa-calendar me-2"></i>Date
-                </th>
-                <th>
-                  <i class="fas fa-clock me-2"></i>Time
-                </th>
-                <th>
-                  <i class="fas fa-tint me-2"></i>Blood Group
-                </th>
-                <th>
-                  <i class="fas fa-phone me-2"></i>Contact
-                </th>
-                <th>
-                  <i class="fas fa-info-circle me-2"></i>Status
-                </th>
+                <th>Blood Group</th>
+                <th>Component</th>
+                <th>Current Stock</th>
+                <th>Update Stock</th>
+                <th>Expiry Date</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {% for appointment in appointments|slice:":5" %}
+              {% for stock in blood_stocks %}
               <tr>
-                <td class="align-middle">
-                  <div class="d-flex align-items-center">
-                    <div class="avatar-circle me-2">{{ appointment.full_name|make_list|first|upper }}</div>
-                    <div>{{ appointment.full_name }}</div>
-                  </div>
+                <td class="blood-group-cell">{{ stock.blood_group }}</td>
+                <td class="component-cell">{{ stock.component }}</td>
+                <td class="stock-cell">
+                  {{ stock.units_available }} units
                 </td>
-                <td class="align-middle">{{ appointment.appointment_date }}</td>
-                <td class="align-middle">{{ appointment.appointment_time }}</td>
-                <td class="align-middle">
-                  <span class="blood-group-badge">{{ appointment.blood_group }}</span>
+                <td>
+                  <input type="number" name="stock_{{ stock.id }}" class="stock-input" min="0"
+                    value="{{ stock.units_available }}" />
                 </td>
-                <td class="align-middle">
-                  <a href="tel:{{ appointment.phone_number }}" class="text-decoration-none contact-link">
-                    <i class="fas fa-phone-alt me-1"></i>
-                    {{ appointment.phone_number }}
-                  </a>
+                <td>
+                  <input type="date" name="expiry_{{ stock.id }}" class="expiry-input"
+                    value="{{ stock.expiry_date|date:'Y-m-d' }}" />
                 </td>
-                <td class="align-middle">
-                  <span class="status-pill status-{{ appointment.status|lower }}">
-                    {{ appointment.status }}
-                  </span>
+                <td>
+                  {% if stock.units_available >= 50 %}
+                  <span class="status-badge status-high">High</span>
+                  {% elif stock.units_available >= 20 %}
+                  <span class="status-badge status-medium">Medium</span>
+                  {% else %}
+                  <span class="status-badge status-low">Low</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button type="submit" name="update_stock" value="{{ stock.id }}" class="update-btn">
+                    <i class="fas fa-sync-alt me-2"></i>Update
+                  </button>
                 </td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-        {% else %}
-        <div class="empty-state">
-          <i class="fas fa-calendar-times empty-icon"></i>
-          <p>No appointments found</p>
-          <small class="text-muted">New appointments will appear here</small>
+      </form>
+
+      <!-- Appointments Section -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <h3><i class="fas fa-calendar-check me-2"></i>Recent Appointments</h3>
+          <div>
+            <a href="{% url 'confirmed_appointments' %}" class="btn btn-success me-2">
+              <i class="fas fa-heartbeat me-2"></i>Donation Status
+            </a>
+            <a href="{% url 'registered_users' %}" class="btn btn-primary">
+              <i class="fas fa-list me-2"></i>View All
+            </a>
+          </div>
         </div>
-        {% endif %}
+        <div class="p-0">
+          {% if appointments %}
+          <div class="table-responsive">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Donor Information</th>
+                  <th>Date & Time</th>
+                  <th>Blood Group</th>
+                  <th>Contact</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle me-2">
+                        {{ appointment.full_name|first|upper }}
+                      </div>
+                      <div>
+                        <div class="fw-medium">{{ appointment.full_name }}</div>
+                        <div class="text-muted small">{{ appointment.email }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex flex-column">
+                      <div><i class="fas fa-calendar-day me-1"></i> {{ appointment.appointment_date|date:"M d, Y" }}
+                      </div>
+                      <div class="text-muted small"><i class="fas fa-clock me-1"></i> {{ appointment.appointment_time }}
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="blood-group-badge">{{ appointment.blood_group }}</span></td>
+                  <td>
+                    <a href="tel:{{ appointment.phone_number }}" class="contact-link">
+                      <i class="fas fa-phone-alt me-1"></i>{{ appointment.phone_number }}
+                    </a>
+                  </td>
+                  <td>
+                    {% if appointment.status == 'PENDING' %}
+                    <span class="status-pill status-pending">Pending</span>
+                    {% elif appointment.status == 'CONFIRMED' %}
+                    <span class="status-pill status-confirmed">Confirmed</span>
+                    {% elif appointment.status == 'CANCELLED' %}
+                    <span class="status-pill status-cancelled">Cancelled</span>
+                    {% else %}
+                    <span class="status-pill status-completed">Completed</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="d-flex">
+                      <a href="{% url 'accept_appointment' appointment.id %}"
+                        class="btn btn-sm btn-outline-success me-2" title="Accept Appointment">
+                        <i class="fas fa-check"></i>
+                      </a>
+                      <a href="{% url 'reject_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger"
+                        title="Reject Appointment">
+                        <i class="fas fa-times"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="empty-state">
+            <i class="fas fa-calendar-times empty-icon"></i>
+            <h6>No appointments found</h6>
+            <p class="text-muted">There are no upcoming appointments at the moment</p>
+          </div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
