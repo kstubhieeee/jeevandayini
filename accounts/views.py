@@ -611,7 +611,10 @@ def registered_users(request):
         for appt in appointments[:5]:  # Print first 5 for debugging
             print(f"Appointment: {appt.id} - {appt.full_name} - {appt.appointment_date}")
             
-        return render(request, 'accounts/registered_users.html', {'appointments': appointments})
+        # Add today's date for comparisons in template
+        today = timezone.now().date()
+        
+        return render(request, 'accounts/registered_users.html', {'appointments': appointments, 'today': today})
     except Exception as e:
         print(f"Error in registered_users: {str(e)}")
         messages.error(request, f"Error retrieving appointments: {str(e)}")
@@ -754,10 +757,14 @@ def blood_bank_dashboard(request):
         for appt in appointments:
             print(f"Appointment: ID={appt.id}, User={appt.user.username}, Name={appt.full_name}, Date={appt.appointment_date}, Status={appt.status}")  # Debug print
         
+        # Add today's date for comparisons in template
+        today = timezone.now().date()
+        
         context.update({
             'blood_bank': blood_bank,
             'blood_stocks': blood_stocks,
-            'appointments': appointments
+            'appointments': appointments,
+            'today': today
         })
         
         return render(request, 'accounts/blood_bank_dashboard.html', context)
@@ -866,10 +873,14 @@ def confirmed_appointments(request):
             appt = confirmed_appointments[0]
             print(f"Sample appointment - ID: {appt.id}, Date: {appt.appointment_date}, Status: {appt.status}")
         
+        # Add today's date for comparisons in template
+        today = timezone.now().date()
+        
         print("Rendering template")
         return render(request, 'accounts/confirmed_appointments.html', {
             'confirmed_appointments': confirmed_appointments,
-            'blood_bank': blood_bank
+            'blood_bank': blood_bank,
+            'today': today
         })
     except BloodBank.DoesNotExist:
         print("Blood bank not found for user")

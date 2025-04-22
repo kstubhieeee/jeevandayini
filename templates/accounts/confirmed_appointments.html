@@ -328,6 +328,20 @@
             box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
             outline: none;
         }
+
+        .donation-status.status-not-donated {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+        }
+
+        tr.expired {
+            background-color: #f8f9fa;
+            opacity: 0.8;
+        }
+
+        tr.expired td {
+            color: #6c757d;
+        }
     </style>
 </head>
 
@@ -409,7 +423,7 @@
                         <tbody>
                             {% for appointment in confirmed_appointments %}
                             <tr
-                                class="{% if appointment.donation_status == 'DONATED' %}donated{% else %}not-donated{% endif %}">
+                                class="{% if appointment.appointment_date < today %}expired{% else %}{% if appointment.donation_status == 'DONATED' %}donated{% else %}not-donated{% endif %}{% endif %}">
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar-circle me-2">
@@ -475,54 +489,60 @@
                                     </div>
                                 </td>
                                 <td>
-                                    {% if appointment.donation_status == 'DONATED' %}
-                                    <span class="donation-status status-donated">Donated</span>
-                                    {% else %}
-                                    <span class="donation-status status-not-donated">Not Donated</span>
-                                    {% endif %}
+                                    {% if appointment.appointment_date < today %} <span
+                                        class="donation-status status-not-donated">Expired</span>
+                                        {% elif appointment.donation_status == 'DONATED' %}
+                                        <span class="donation-status status-donated">Donated</span>
+                                        {% else %}
+                                        <span class="donation-status status-not-donated">Not Donated</span>
+                                        {% endif %}
                                 </td>
                                 <td>
-                                    <div class="d-flex">
-                                        {% if appointment.donation_status != 'DONATED' %}
-                                        <form method="post" action="{% url 'mark_donated' appointment.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="action-btn donate-btn me-2">
-                                                <i class="fas fa-check-circle"></i> Mark as Donated
-                                            </button>
-                                        </form>
-                                        {% else %}
-                                        <div class="d-flex">
-                                            <form method="post" action="{% url 'mark_not_donated' appointment.id %}"
-                                                class="me-2">
-                                                {% csrf_token %}
-                                                <button type="submit" class="action-btn no-donate-btn">
-                                                    <i class="fas fa-times-circle"></i> Mark as Not Donated
-                                                </button>
-                                            </form>
-                                            <form method="post" action="{% url 'send_certificate' appointment.id %}">
-                                                {% csrf_token %}
-                                                <button type="submit" class="action-btn btn-primary">
-                                                    <i class="fas fa-certificate"></i> Send Certificate
-                                                </button>
-                                            </form>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                    {% if appointment.appointment_date < today %} <div class="text-muted small"><i
+                                            class="fas fa-info-circle me-1"></i>Appointment expired
                 </div>
                 {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-calendar-check empty-icon"></i>
-                    <h4>No Confirmed Appointments</h4>
-                    <p class="text-muted">There are no confirmed appointments available at the moment.</p>
+                <div class="d-flex">
+                    {% if appointment.donation_status != 'DONATED' %}
+                    <form method="post" action="{% url 'mark_donated' appointment.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="action-btn donate-btn me-2">
+                            <i class="fas fa-check-circle"></i> Mark as Donated
+                        </button>
+                    </form>
+                    {% else %}
+                    <div class="d-flex">
+                        <form method="post" action="{% url 'mark_not_donated' appointment.id %}" class="me-2">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn no-donate-btn">
+                                <i class="fas fa-times-circle"></i> Mark as Not Donated
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'send_certificate' appointment.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="action-btn btn-primary">
+                                <i class="fas fa-certificate"></i> Send Certificate
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
+                </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
             </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-check empty-icon"></i>
+                <h4>No Confirmed Appointments</h4>
+                <p class="text-muted">There are no confirmed appointments available at the moment.</p>
+            </div>
+            {% endif %}
         </div>
+    </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

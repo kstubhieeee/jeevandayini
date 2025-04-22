@@ -290,39 +290,44 @@
               </td>
               <td>
                 <span class="status-badge status-{{ appointment.status|lower }}">
-                  {{ appointment.status }}
-                </span>
+                  {% if appointment.appointment_date < today %} Expired {% else %} {{ appointment.status }} {% endif %}
+                    </span>
               </td>
               <td>
-                <div class="btn-group">
-                  <a href="{% url 'accept_appointment' appointment.id %}"
-                    class="btn btn-sm btn-outline-success {% if appointment.status == 'CONFIRMED' %}disabled{% endif %}"
-                    title="Approve">
-                    <i class="fas fa-check"></i>
-                  </a>
-                  <a href="{% url 'reject_appointment' appointment.id %}"
-                    class="btn btn-sm btn-outline-danger {% if appointment.status == 'CANCELLED' %}disabled{% endif %}"
-                    title="Reject">
-                    <i class="fas fa-times"></i>
-                  </a>
-                  <button class="btn btn-sm btn-outline-primary" title="Edit">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                {% if appointment.appointment_date < today %} <div class="text-muted small"><i
+                    class="fas fa-info-circle me-1"></i>Appointment expired
       </div>
       {% else %}
-      <div class="empty-state">
-        <i class="fas fa-calendar-times"></i>
-        <p>No appointments found</p>
-        <small class="text-muted">New appointments will appear here once scheduled</small>
+      <div class="btn-group">
+        <a href="{% url 'accept_appointment' appointment.id %}"
+          class="btn btn-sm btn-outline-success {% if appointment.status == 'CONFIRMED' %}disabled{% endif %}"
+          title="Approve">
+          <i class="fas fa-check"></i>
+        </a>
+        <a href="{% url 'reject_appointment' appointment.id %}"
+          class="btn btn-sm btn-outline-danger {% if appointment.status == 'CANCELLED' %}disabled{% endif %}"
+          title="Reject">
+          <i class="fas fa-times"></i>
+        </a>
+        <button class="btn btn-sm btn-outline-primary" title="Edit">
+          <i class="fas fa-edit"></i>
+        </button>
       </div>
       {% endif %}
+      </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+      </table>
     </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-calendar-times"></i>
+      <p>No appointments found</p>
+      <small class="text-muted">New appointments will appear here once scheduled</small>
+    </div>
+    {% endif %}
+  </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

@@ -559,6 +559,26 @@
       margin-bottom: 1rem;
       opacity: 0.5;
     }
+
+    .status-pill.status-pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: #ffc107;
+    }
+
+    .status-pill.status-confirmed {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: #28a745;
+    }
+
+    .status-pill.status-cancelled {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: #dc3545;
+    }
+
+    .status-pill.status-completed {
+      background-color: rgba(13, 110, 253, 0.1);
+      color: #0d6efd;
+    }
   </style>
 </head>
 
@@ -813,43 +833,50 @@
                     </a>
                   </td>
                   <td>
-                    {% if appointment.status == 'PENDING' %}
-                    <span class="status-pill status-pending">Pending</span>
-                    {% elif appointment.status == 'CONFIRMED' %}
-                    <span class="status-pill status-confirmed">Confirmed</span>
-                    {% elif appointment.status == 'CANCELLED' %}
-                    <span class="status-pill status-cancelled">Cancelled</span>
-                    {% else %}
-                    <span class="status-pill status-completed">Completed</span>
-                    {% endif %}
+                    {% if appointment.appointment_date < today %} <span class="status-pill status-cancelled">
+                      Expired</span>
+                      {% elif appointment.status == 'PENDING' %}
+                      <span class="status-pill status-pending">Pending</span>
+                      {% elif appointment.status == 'CONFIRMED' %}
+                      <span class="status-pill status-confirmed">Confirmed</span>
+                      {% elif appointment.status == 'CANCELLED' %}
+                      <span class="status-pill status-cancelled">Cancelled</span>
+                      {% else %}
+                      <span class="status-pill status-completed">Completed</span>
+                      {% endif %}
                   </td>
                   <td>
-                    <div class="d-flex">
-                      <a href="{% url 'accept_appointment' appointment.id %}"
-                        class="btn btn-sm btn-outline-success me-2" title="Accept Appointment">
-                        <i class="fas fa-check"></i>
-                      </a>
-                      <a href="{% url 'reject_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger"
-                        title="Reject Appointment">
-                        <i class="fas fa-times"></i>
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+                    {% if appointment.appointment_date < today %} <div class="text-muted small"><i
+                        class="fas fa-info-circle me-1"></i>Appointment expired
           </div>
           {% else %}
-          <div class="empty-state">
-            <i class="fas fa-calendar-times empty-icon"></i>
-            <h6>No appointments found</h6>
-            <p class="text-muted">There are no upcoming appointments at the moment</p>
+          <div class="d-flex">
+            <a href="{% url 'accept_appointment' appointment.id %}" class="btn btn-sm btn-outline-success me-2"
+              title="Accept Appointment">
+              <i class="fas fa-check"></i>
+            </a>
+            <a href="{% url 'reject_appointment' appointment.id %}" class="btn btn-sm btn-outline-danger"
+              title="Reject Appointment">
+              <i class="fas fa-times"></i>
+            </a>
           </div>
           {% endif %}
+          </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+          </table>
         </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-calendar-times empty-icon"></i>
+          <h6>No appointments found</h6>
+          <p class="text-muted">There are no upcoming appointments at the moment</p>
+        </div>
+        {% endif %}
       </div>
     </div>
+  </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
