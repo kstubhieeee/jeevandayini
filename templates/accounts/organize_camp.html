@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Organize Blood Camp - Jeevandayini</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #e63946;
+        --secondary-color: #1d3557;
+        --accent-color: #457b9d;
+        --light-color: #f1faee;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-logo {
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-logo img {
+        height: 50px;
+        width: auto;
+        margin-right: 1rem;
+      }
+
+      .main-content {
+        padding: 2rem;
+        margin-top: 80px;
+      }
+
+      .camp-form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .form-title {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.8rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, var(--primary-color), #ff4d4d);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(230, 57, 70, 0.2);
+      }
+
+      .alert {
+        border-radius: 10px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        border: none;
+      }
+
+      .alert-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+      }
+
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-logo">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+        <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
+      </div>
+      <div class="navbar-links">
+        <a
+          href="{% url 'blood_bank_dashboard' %}"
+          class="btn btn-outline-secondary"
+        >
+          <i class="fas fa-home me-2"></i>Dashboard
+        </a>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+          <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="container">
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <i
+            class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"
+          ></i>
+          {{ message }}
+        </div>
+        {% endfor %} {% endif %}
+
+        <div class="camp-form-card">
+          <h2 class="form-title">
+            <i class="fas fa-campground me-2"></i>Organize Blood Donation Camp
+          </h2>
+          <form method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Camp Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">Camp Date</label>
+                  <input
+                    type="date"
+                    name="camp_date"
+                    class="form-control"
+                    required
+                    min="{{ today|date:'Y-m-d' }}"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">Start Time</label>
+                  <input
+                    type="time"
+                    name="start_time"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">End Time</label>
+                  <input
+                    type="time"
+                    name="end_time"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Contact Person</label>
+                  <input
+                    type="text"
+                    name="contact_person"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Contact Number</label>
+                  <input
+                    type="tel"
+                    name="contact_number"
+                    class="form-control"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Expected Number of Donors</label>
+              <input
+                type="number"
+                name="expected_donors"
+                class="form-control"
+                required
+                min="1"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea
+                name="description"
+                class="form-control"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fas fa-calendar-plus me-2"></i>Schedule Blood Donation
+              Camp
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

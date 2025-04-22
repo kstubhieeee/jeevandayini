@@ -1,0 +1,353 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule Appointment - Jeevandayani</title>
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+/>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .appointment-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .title {
+        color: #e63946;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 1rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .subtitle {
+        color: #1d3557;
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-section {
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-section:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+
+      .section-title {
+        color: #1d3557;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        color: #1d3557;
+        font-weight: 600;
+      }
+
+      .form-control {
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #e63946;
+        box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25);
+      }
+
+      .submit-button {
+        background-color: #e63946;
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 1rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .submit-button:hover {
+        background-color: #752bd6;
+      }
+
+      .error-message {
+        color: #e63946;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+
+      .back-link {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        color: #1d3557;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        color: #e63946;
+      }
+
+      .info-text {
+        color: #6c757d;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+      }
+
+      @media (max-width: 768px) {
+        .appointment-container {
+          padding: 1rem;
+        }
+
+        .title {
+          font-size: 2rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+          margin-bottom: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{% url 'search_banks' %}" class="back-link"
+      >← Back to Blood Banks</a
+    >
+
+    <div class="appointment-container">
+      <h1 class="title">Schedule Blood Donation</h1>
+      <h2 class="subtitle">at {{ blood_bank.name }}</h2>
+
+      <div class="form-container">
+        <form
+          method="post"
+          action="{% url 'schedule_appointment' bank_id=blood_bank.id %}"
+        >
+          {% csrf_token %} {% if form.errors %}
+          <div class="alert alert-danger">Please correct the errors below.</div>
+          {% endif %}
+
+          <!-- Appointment Details -->
+          <div class="form-section">
+            <h3 class="section-title">Appointment Details</h3>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.appointment_date.id_for_label }}"
+                  class="form-label"
+                  >Preferred Date</label
+                >
+                {{ form.appointment_date }} {% if form.appointment_date.errors
+                %}
+                <div class="error-message">
+                  {{ form.appointment_date.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.appointment_time.id_for_label }}"
+                  class="form-label"
+                  >Preferred Time</label
+                >
+                {{ form.appointment_time }} {% if form.appointment_time.errors
+                %}
+                <div class="error-message">
+                  {{ form.appointment_time.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Personal Information -->
+          <div class="form-section">
+            <h3 class="section-title">Personal Information</h3>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.full_name.id_for_label }}"
+                  class="form-label"
+                  >Full Name</label
+                >
+                {{ form.full_name }} {% if form.full_name.errors %}
+                <div class="error-message">{{ form.full_name.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.age.id_for_label }}" class="form-label"
+                  >Age</label
+                >
+                {{ form.age }} {% if form.age.errors %}
+                <div class="error-message">{{ form.age.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.gender.id_for_label }}" class="form-label"
+                  >Gender</label
+                >
+                {{ form.gender }} {% if form.gender.errors %}
+                <div class="error-message">{{ form.gender.errors.0 }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.blood_group.id_for_label }}"
+                  class="form-label"
+                  >Blood Group</label
+                >
+                {{ form.blood_group }} {% if form.blood_group.errors %}
+                <div class="error-message">{{ form.blood_group.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="form-section">
+            <h3 class="section-title">Contact Information</h3>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.phone_number.id_for_label }}"
+                  class="form-label"
+                  >Phone Number</label
+                >
+                {{ form.phone_number }} {% if form.phone_number.errors %}
+                <div class="error-message">
+                  {{ form.phone_number.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label"
+                  >Email</label
+                >
+                {{ form.email }} {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="{{ form.address.id_for_label }}" class="form-label"
+                >Address</label
+              >
+              {{ form.address }} {% if form.address.errors %}
+              <div class="error-message">{{ form.address.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Government ID -->
+          <div class="form-section">
+            <h3 class="section-title">Identity Verification</h3>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.govt_id_type.id_for_label }}"
+                  class="form-label"
+                  >ID Type</label
+                >
+                {{ form.govt_id_type }} {% if form.govt_id_type.errors %}
+                <div class="error-message">
+                  {{ form.govt_id_type.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label
+                  for="{{ form.govt_id_number.id_for_label }}"
+                  class="form-label"
+                  >ID Number</label
+                >
+                {{ form.govt_id_number }} {% if form.govt_id_number.errors %}
+                <div class="error-message">
+                  {{ form.govt_id_number.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Medical Information -->
+          <div class="form-section">
+            <h3 class="section-title">Medical Information</h3>
+            <div class="mb-3">
+              <label
+                for="{{ form.previous_donation.id_for_label }}"
+                class="form-label"
+                >Previous Donation Date (if any)</label
+              >
+              {{ form.previous_donation }} {% if form.previous_donation.errors
+              %}
+              <div class="error-message">
+                {{ form.previous_donation.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+            <div class="mb-3">
+              <label
+                for="{{ form.medical_conditions.id_for_label }}"
+                class="form-label"
+                >Medical Conditions</label
+              >
+              {{ form.medical_conditions }} {% if form.medical_conditions.errors
+              %}
+              <div class="error-message">
+                {{ form.medical_conditions.errors.0 }}
+              </div>
+              {% endif %}
+              <div class="info-text">
+                Please list any medical conditions or medications you are
+                currently taking
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-button">
+            Schedule Appointment
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

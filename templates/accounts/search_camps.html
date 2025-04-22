@@ -1,0 +1,379 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Blood Camps - Jeevandayani</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        min-height: 100vh;
+        margin: 0;
+        padding: 2rem;
+      }
+
+      .search-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .title {
+        color: #e63946;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        color: #1d3557;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-control {
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #e63946;
+        box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25);
+      }
+
+      .search-button {
+        background-color: #e63946;
+        color: white;
+        border: none;
+        padding: 0.8rem 2rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        width: 100%;
+      }
+
+      .search-button:hover {
+        background-color: #752bd6;
+      }
+
+      .results-container {
+        margin-top: 2rem;
+      }
+
+      .answer-box {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        display: none;
+      }
+
+      .answer-title {
+        color: #1d3557;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .camp-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .camp-item {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #e9ecef;
+      }
+
+      .camp-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .camp-type-badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .special-camp {
+        background-color: #e63946;
+        color: white;
+      }
+
+      .regular-camp {
+        background-color: #1d3557;
+        color: white;
+      }
+
+      .camp-name {
+        color: #e63946;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .camp-info {
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+      }
+
+      .camp-date {
+        color: #1d3557;
+        font-weight: 600;
+      }
+
+      .no-camps {
+        text-align: center;
+        color: #6c757d;
+        font-size: 1.1rem;
+        padding: 2rem;
+      }
+
+      .back-link {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        color: #1d3557;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        color: #e63946;
+      }
+
+      .description {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+        font-style: italic;
+        color: #6c757d;
+      }
+
+      @media (max-width: 768px) {
+        .search-container {
+          padding: 1rem;
+        }
+
+        .title {
+          font-size: 2rem;
+          margin-bottom: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{% url 'type_donation' %}" class="back-link">← Back to Options</a>
+
+    <div class="search-container">
+      <h1 class="title">Find Blood Donation Camps</h1>
+
+      <div class="search-box">
+        <form id="searchForm" method="GET">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="state" class="form-label">State</label>
+                <select id="state" name="state" class="form-control" required>
+                  <option value="">Select State</option>
+                  {% for state in states %}
+                  <option value="{{ state.id }}">{{ state.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="district" class="form-label">District</label>
+                <select
+                  id="district"
+                  name="district"
+                  class="form-control"
+                  required
+                >
+                  <option value="">Select District</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="date" class="form-label">Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  class="form-control"
+                  min="{{ today|date:'Y-m-d' }}"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="search-button">Search Camps</button>
+        </form>
+      </div>
+
+      <div id="results" class="results-container">
+        <div id="answerBox" class="answer-box">
+          <h2 class="answer-title">Available Blood Donation Camps</h2>
+          <div id="campsList" class="camp-list">
+            <!-- Camps will be loaded here dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const stateSelect = document.getElementById("state");
+        const districtSelect = document.getElementById("district");
+        const searchForm = document.getElementById("searchForm");
+        const answerBox = document.getElementById("answerBox");
+        const campsList = document.getElementById("campsList");
+
+        stateSelect.addEventListener("change", function () {
+          const stateId = this.value;
+          districtSelect.innerHTML =
+            '<option value="">Select District</option>';
+
+          if (stateId) {
+            fetch(`/accounts/get-districts/${stateId}/`)
+              .then((response) => response.json())
+              .then((data) => {
+                data.forEach((district) => {
+                  const option = document.createElement("option");
+                  option.value = district.id;
+                  option.textContent = district.name;
+                  districtSelect.appendChild(option);
+                });
+              })
+              .catch((error) => {
+                console.error("Error fetching districts:", error);
+              });
+          }
+        });
+
+        // Set minimum date for the date input to today
+        const dateInput = document.getElementById("date");
+        const today = new Date().toISOString().split("T")[0];
+        dateInput.min = today;
+
+        // Handle form submission
+        searchForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const formData = new FormData(searchForm);
+
+          // Show loading state
+          campsList.innerHTML =
+            '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+          answerBox.style.display = "block";
+
+          // Make API call to search camps
+          fetch(
+            "/accounts/search-camps/results/?" + new URLSearchParams(formData)
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.length > 0) {
+                campsList.innerHTML = data
+                  .map(
+                    (camp) => `
+                  <div class="camp-item">
+                    <div class="camp-type-badge ${
+                      camp.type === "Special Donation Camp"
+                        ? "special-camp"
+                        : "regular-camp"
+                    }">
+                      ${camp.type}
+                    </div>
+                    <div class="camp-name">${camp.name}</div>
+                    <div class="camp-info">
+                      <i class="fas fa-map-marker-alt"></i> ${camp.location}
+                    </div>
+                    <div class="camp-info">
+                      <i class="fas fa-hospital"></i> ${camp.blood_bank}
+                    </div>
+                    <div class="camp-info">
+                      <i class="fas fa-user"></i> ${camp.contact_person}
+                    </div>
+                    <div class="camp-info">
+                      <i class="fas fa-phone"></i> ${camp.contact}
+                    </div>
+                    <div class="camp-info">
+                      <i class="fas fa-users"></i> Expected Donors: ${
+                        camp.expected_donors
+                      }
+                    </div>
+                    <div class="camp-date">
+                      <i class="far fa-calendar-alt"></i> ${camp.date}
+                    </div>
+                    <div class="camp-info">
+                      <i class="far fa-clock"></i> ${camp.time}
+                    </div>
+                    <div class="camp-info description">
+                      <i class="fas fa-info-circle"></i> ${camp.description}
+                    </div>
+                  </div>
+                `
+                  )
+                  .join("");
+              } else {
+                campsList.innerHTML =
+                  '<div class="no-camps">No blood donation camps found for the selected criteria.</div>';
+              }
+            })
+            .catch((error) => {
+              console.error("Error searching camps:", error);
+              campsList.innerHTML =
+                '<div class="no-camps">An error occurred while searching for camps. Please try again.</div>';
+            });
+        });
+      });
+    </script>
+    <!-- Add Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </body>
+</html>

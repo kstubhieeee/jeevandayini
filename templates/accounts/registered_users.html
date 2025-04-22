@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointments Management - Jeevandayini</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #e63946;
+      --secondary-color: #1d3557;
+      --accent-color: #457b9d;
+      --light-color: #f1faee;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-logo img {
+      height: 50px;
+      width: auto;
+      margin-right: 1rem;
+    }
+
+    .main-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      color: var(--secondary-color);
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .page-subtitle {
+      color: var(--accent-color);
+      margin: 0.5rem 0 0 0;
+      font-size: 1rem;
+    }
+
+    .appointments-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 0.8rem;
+    }
+
+    .appointments-table th {
+      background-color: var(--light-color);
+      padding: 1.2rem 1rem;
+      color: var(--secondary-color);
+      font-weight: 600;
+      border: none;
+    }
+
+    .appointments-table tbody tr {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .appointments-table tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointments-table td {
+      padding: 1.2rem 1rem;
+      vertical-align: middle;
+      border: none;
+    }
+
+    .avatar-circle {
+      width: 40px;
+      height: 40px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 1rem;
+    }
+
+    .blood-group-badge {
+      background-color: rgba(230, 57, 70, 0.1);
+      color: var(--primary-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .contact-link {
+      color: var(--accent-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s ease;
+    }
+
+    .contact-link:hover {
+      color: var(--primary-color);
+    }
+
+    .date-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-logo">
+      <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+      <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
+    </div>
+    <div>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="main-card">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">
+            <i class="fas fa-calendar-check me-2"></i>Upcoming Appointments
+          </h2>
+          <p class="page-subtitle">Manage and track all scheduled appointments</p>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-primary">
+            <i class="fas fa-filter me-2"></i>Filter
+          </button>
+          <button class="btn btn-outline-success">
+            <i class="fas fa-file-excel me-2"></i>Export
+          </button>
+        </div>
+      </div>
+
+      {% if appointments %}
+      <div class="table-responsive">
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th><i class="fas fa-user me-2"></i>Full Name</th>
+              <th><i class="fas fa-calendar me-2"></i>Preferred Date</th>
+              <th><i class="fas fa-clock me-2"></i>Preferred Time</th>
+              <th><i class="fas fa-tint me-2"></i>Blood Group</th>
+              <th><i class="fas fa-envelope me-2"></i>Contact</th>
+              <th><i class="fas fa-cog me-2"></i>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for appointment in appointments %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="avatar-circle">
+                    {{ appointment.user.get_full_name|make_list|first|upper }}
+                  </div>
+                  <div>
+                    <div class="fw-semibold">{{ appointment.user.get_full_name }}</div>
+                    <small class="text-muted">ID: #{{ appointment.id }}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="date-time">
+                  <i class="fas fa-calendar-day"></i>
+                  {{ appointment.appointment_date }}
+                </div>
+              </td>
+              <td>
+                <div class="date-time">
+                  <i class="fas fa-clock"></i>
+                  {{ appointment.appointment_time }}
+                </div>
+              </td>
+              <td>
+                <span class="blood-group-badge">{{ appointment.user.userprofile.blood_group }}</span>
+              </td>
+              <td>
+                <a href="mailto:{{ appointment.user.email }}" class="contact-link">
+                  <i class="fas fa-envelope"></i>
+                  {{ appointment.user.email }}
+                </a>
+              </td>
+              <td>
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-success" title="Approve">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" title="Reject">
+                    <i class="fas fa-times"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary" title="Edit">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <i class="fas fa-calendar-times"></i>
+        <p>No appointments found</p>
+        <small class="text-muted">New appointments will appear here once scheduled</small>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

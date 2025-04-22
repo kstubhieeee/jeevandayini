@@ -1,0 +1,154 @@
+/* Root Variables */
+:root {
+    --primary-color: #e63946;
+    --primary-hover: #752bd6;
+    --bg-gradient-start: #fff5f5;
+    --bg-gradient-end: #ffe8e8;
+}
+
+/* Body Styling */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Auth Container */
+.auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* White Login Box */
+.auth-box {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 650px; /* Slightly wider for larger image */
+}
+
+/* Split Content Inside Box */
+.auth-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Form Section */
+.auth-form-section {
+    flex: 1;
+}
+
+/* Form Elements */
+h2 {
+    color: var(--primary-color);
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+label {
+    color: #333;
+    font-weight: 500;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.1);
+}
+
+/* Login Button */
+.auth-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.auth-button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Signup Link */
+.auth-links {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: var(--primary-hover);
+}
+
+/* Bigger Image Inside Box */
+.auth-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-image img {
+    width: 100%;
+    max-width: 250px; /* Increased from 200px */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .auth-image img {
+        max-width: 200px; /* Adjust for smaller screens */
+    }
+}

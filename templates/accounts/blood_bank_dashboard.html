@@ -1,0 +1,598 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Bank Dashboard - Jeevandayini</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary-color: #e63946;
+      --secondary-color: #1d3557;
+      --accent-color: #457b9d;
+      --light-color: #f1faee;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-logo img {
+      height: 50px;
+      width: auto;
+      margin-right: 1rem;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .main-content {
+      padding: 2rem;
+      margin-top: 80px;
+    }
+
+    .dashboard-card {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .welcome-card {
+      background: linear-gradient(135deg,
+          var(--primary-color),
+          var(--secondary-color));
+      color: white;
+    }
+
+    .welcome-card h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .welcome-card p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .stock-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin-top: 1rem;
+    }
+
+    .stock-table th {
+      background-color: var(--light-color);
+      padding: 1.2rem 1rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    .stock-table td {
+      padding: 1.2rem 1rem;
+      vertical-align: middle;
+      background-color: white;
+    }
+
+    .stock-table tr {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .stock-table tr:hover {
+      transform: scale(1.01);
+    }
+
+    .update-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .update-btn:hover {
+      background-color: var(--danger-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+    }
+
+    .stock-input {
+      width: 120px;
+      padding: 0.7rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .stock-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+      outline: none;
+    }
+
+    .expiry-input {
+      width: 170px;
+      padding: 0.7rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .expiry-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+      outline: none;
+    }
+
+    .status-badge {
+      padding: 0.6rem 1.2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-block;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .status-high {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-medium {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .status-low {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+    }
+
+    .blood-group-cell {
+      font-weight: 600;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+    }
+
+    .component-cell {
+      color: var(--secondary-color);
+      font-weight: 500;
+    }
+
+    .stock-cell {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    /* Message alerts styling */
+    .alert {
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .alert-success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .alert-danger {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+    }
+
+    .alert i {
+      font-size: 1.2rem;
+    }
+
+    /* Appointment Table Styles */
+    .appointment-table {
+      margin-top: 1.5rem;
+      border-collapse: separate;
+      border-spacing: 0 0.8rem;
+    }
+
+    .appointment-table thead th {
+      background-color: var(--light-color);
+      padding: 1rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      border: none;
+    }
+
+    .appointment-table tbody tr {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .appointment-table tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .appointment-table td {
+      padding: 1rem;
+      border: none;
+    }
+
+    /* Avatar Circle */
+    .avatar-circle {
+      width: 35px;
+      height: 35px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    /* Blood Group Badge */
+    .blood-group-badge {
+      background-color: rgba(230, 57, 70, 0.1);
+      color: var(--primary-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* Contact Link */
+    .contact-link {
+      color: var(--accent-color);
+      transition: color 0.2s ease;
+    }
+
+    .contact-link:hover {
+      color: var(--primary-color);
+    }
+
+    /* Status Pills */
+    .status-pill {
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .status-approved {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-rejected {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      background-color: white;
+      border-radius: 10px;
+    }
+
+    .empty-state .empty-icon {
+      font-size: 3rem;
+      color: var(--accent-color);
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      font-size: 1.2rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="navbar-logo">
+      <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayini Logo" />
+      <h4 class="mb-0" style="color: var(--primary-color)">Jeevandayini</h4>
+    </div>
+    <div class="navbar-links">
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-home me-2"></i>Home
+      </a>
+      <a href="{% url 'organize_camp' %}" class="btn btn-outline-primary">
+        <i class="fas fa-campground me-2"></i>Organize Blood Camp
+      </a>
+      <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+        <i class="fas fa-sign-out-alt me-2"></i>Logout
+      </a>
+      <a href="{{ registered_users_url }}" class="btn btn-outline-primary">
+        <i class="fas fa-users me-2"></i>Registered Users
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+      {% if messages %} {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %}
+
+      <!-- Debug output -->
+      <div style="display: none">
+        Debug - Blood Bank Data: Name: {{blood_bank.name}} Email:
+        {{blood_bank.email}}
+      </div>
+
+      <div class="dashboard-card welcome-card">
+        <h2>
+          <i class="fas fa-hospital-user me-3"></i>Welcome,
+          {{blood_bank.name|default:"Blood Bank"}}
+        </h2>
+        <p>Manage your blood bank inventory below</p>
+      </div>
+
+      <div class="dashboard-card">
+        <h3 class="mb-4">
+          <i class="fas fa-layer-group me-2"></i>Blood Stock Management
+        </h3>
+
+        <!-- Add New Stock Entry Form -->
+        <div class="mb-4">
+          <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#addNewStock">
+            <i class="fas fa-plus me-2"></i>Add New Blood Stock
+          </button>
+
+          <div class="collapse mb-4" id="addNewStock">
+            <div class="card card-body">
+              <form method="post" action="{% url 'add_blood_stock' %}">
+                {% csrf_token %}
+                <div class="row g-3">
+                  <div class="col-md-3">
+                    <label class="form-label">Blood Group</label>
+                    <select name="blood_group" class="form-select" required>
+                      <option value="">Select Blood Group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Component</label>
+                    <select name="component" class="form-select" required>
+                      <option value="">Select Component</option>
+                      <option value="Whole Blood">Whole Blood</option>
+                      <option value="Plasma">Plasma</option>
+                      <option value="Platelets">Platelets</option>
+                      <option value="Red Cells">Red Cells</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Units Available</label>
+                    <input type="number" name="units" class="form-control" min="0" required />
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label">Expiry Date</label>
+                    <input type="date" name="expiry_date" class="form-control" required />
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">
+                      <i class="fas fa-plus-circle me-2"></i>Add Stock
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Existing Stock Table -->
+        <form method="post" action="{% url 'update_blood_stock' %}">
+          {% csrf_token %}
+          <div class="table-responsive">
+            <table class="stock-table">
+              <thead>
+                <tr>
+                  <th>Blood Group</th>
+                  <th>Component</th>
+                  <th>Current Stock</th>
+                  <th>Update Stock</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for stock in blood_stocks %}
+                <tr>
+                  <td class="blood-group-cell">{{ stock.blood_group }}</td>
+                  <td class="component-cell">{{ stock.component }}</td>
+                  <td class="stock-cell">
+                    {{ stock.units_available }} units
+                  </td>
+                  <td>
+                    <input type="number" name="stock_{{ stock.id }}" class="stock-input" min="0"
+                      value="{{ stock.units_available }}" />
+                  </td>
+                  <td>
+                    <input type="date" name="expiry_{{ stock.id }}" class="expiry-input"
+                      value="{{ stock.expiry_date|date:'Y-m-d' }}" />
+                  </td>
+                  <td>
+                    {% if stock.units_available >= 50 %}
+                    <span class="status-badge status-high">High</span>
+                    {% elif stock.units_available >= 20 %}
+                    <span class="status-badge status-medium">Medium</span>
+                    {% else %}
+                    <span class="status-badge status-low">Low</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <button type="submit" name="update_stock" value="{{ stock.id }}" class="update-btn">
+                      <i class="fas fa-sync-alt me-2"></i>Update
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+
+      <!-- Appointments Section -->
+      <div class="dashboard-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h3 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Recent Appointments</h3>
+            <p class="text-muted mb-0">Last 5 appointment requests</p>
+          </div>
+          <a href="{% url 'registered_users' %}" class="btn btn-primary">
+            <i class="fas fa-list-ul me-2"></i>View All Appointments
+          </a>
+        </div>
+
+        {% if appointments %}
+        <div class="table-responsive">
+          <table class="table appointment-table">
+            <thead>
+              <tr>
+                <th>
+                  <i class="fas fa-user me-2"></i>Name
+                </th>
+                <th>
+                  <i class="fas fa-calendar me-2"></i>Date
+                </th>
+                <th>
+                  <i class="fas fa-clock me-2"></i>Time
+                </th>
+                <th>
+                  <i class="fas fa-tint me-2"></i>Blood Group
+                </th>
+                <th>
+                  <i class="fas fa-phone me-2"></i>Contact
+                </th>
+                <th>
+                  <i class="fas fa-info-circle me-2"></i>Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appointment in appointments|slice:":5" %}
+              <tr>
+                <td class="align-middle">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-2">{{ appointment.full_name|make_list|first|upper }}</div>
+                    <div>{{ appointment.full_name }}</div>
+                  </div>
+                </td>
+                <td class="align-middle">{{ appointment.appointment_date }}</td>
+                <td class="align-middle">{{ appointment.appointment_time }}</td>
+                <td class="align-middle">
+                  <span class="blood-group-badge">{{ appointment.blood_group }}</span>
+                </td>
+                <td class="align-middle">
+                  <a href="tel:{{ appointment.phone_number }}" class="text-decoration-none contact-link">
+                    <i class="fas fa-phone-alt me-1"></i>
+                    {{ appointment.phone_number }}
+                  </a>
+                </td>
+                <td class="align-middle">
+                  <span class="status-pill status-{{ appointment.status|lower }}">
+                    {{ appointment.status }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-calendar-times empty-icon"></i>
+          <p>No appointments found</p>
+          <small class="text-muted">New appointments will appear here</small>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        const alerts = document.querySelectorAll(".alert");
+        alerts.forEach(function (alert) {
+          alert.style.opacity = "0";
+          alert.style.transition = "opacity 0.5s ease";
+          setTimeout(function () {
+            alert.remove();
+          }, 500);
+        });
+      }, 5000);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,627 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Availability - Jeevandayani</title>
+    <!-- Add Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        padding: 10px 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-logo {
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-logo img {
+        height: 50px;
+        width: auto;
+        margin-right: 10px;
+        display: block;
+        object-fit: contain;
+      }
+
+      .main-content {
+        padding: 4rem 0;
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin: 2rem auto;
+        max-width: 1200px;
+        border-radius: 10px;
+      }
+
+      .container h2 {
+        color: #e63946;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        position: relative;
+        display: inline-block;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .container h2:after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background-color: #e63946;
+        border-radius: 2px;
+      }
+
+      /* Form styling */
+      #bloodFilterForm {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        display: block;
+        color: #1d3557;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #495057;
+        background-color: white;
+        transition: border-color 0.3s ease;
+        margin-bottom: 1rem;
+      }
+
+      select:focus {
+        border-color: #e63946;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.1);
+      }
+
+      button[type="submit"] {
+        background: linear-gradient(135deg, #e63946, #ff4d4d);
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 2rem auto 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+      }
+
+      button[type="submit"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+        background: linear-gradient(135deg, #ff4d4d, #e63946);
+      }
+
+      /* Table styling */
+      .table-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+      }
+
+      #bloodTable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 1rem;
+      }
+
+      #bloodTable th {
+        background: linear-gradient(135deg, #e63946, #ff4d4d);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      #bloodTable th:first-child {
+        border-top-left-radius: 10px;
+      }
+
+      #bloodTable th:last-child {
+        border-top-right-radius: 10px;
+      }
+
+      #bloodTable td {
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+        color: #1d3557;
+      }
+
+      #bloodTable tbody tr:hover {
+        background-color: #fff5f5;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .main-content {
+          margin: 1rem;
+          padding: 2rem 1rem;
+        }
+
+        .container h2 {
+          font-size: 2rem;
+        }
+
+        #bloodFilterForm {
+          padding: 1.5rem;
+        }
+
+        .table-container {
+          padding: 1rem;
+        }
+
+        #bloodTable {
+          font-size: 0.9rem;
+        }
+      }
+
+      /* Add loading spinner styles */
+      .spinner-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #e63946;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Add styles for blood stock indicators */
+      .stock-status {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .stock-high {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .stock-medium {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .stock-low {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      /* Add styles for blood bank cards in mobile view */
+      .blood-bank-card {
+        display: none;
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .blood-bank-card h3 {
+        color: #e63946;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+      }
+
+      .blood-bank-info {
+        margin-bottom: 5px;
+        color: #1d3557;
+      }
+
+      /* Error message styling */
+      .error-message {
+        display: none;
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      /* Success message styling */
+      .success-message {
+        display: none;
+        background-color: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      @media (max-width: 768px) {
+        .blood-bank-card {
+          display: block;
+        }
+
+        #bloodTable {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="navbar">
+      <div class="navbar-logo">
+        <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayani Logo" />
+      </div>
+      <div class="navbar-links">
+        <a href="{% url 'dashboard' %}">Home</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay" id="loadingSpinner">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="container">
+        <h2>Find Available Blood</h2>
+
+        <!-- Messages -->
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Filter Form -->
+        <form
+          id="bloodFilterForm"
+          method="post"
+          action="{% url 'get_blood_availability' %}"
+        >
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="state">Select State:</label>
+            <select id="state" name="state" required>
+              <option value="">--Select State--</option>
+              {% for state in states %}
+              <option value="{{ state.id }}">{{ state.name }}</option>
+              {% endfor %}
+            </select>
+
+            <label for="district">Select District:</label>
+            <select id="district" name="district" required>
+              <option value="">--Select District--</option>
+            </select>
+
+            <label for="blood_group">Select Blood Group:</label>
+            <select id="blood_group" name="blood_group" required>
+              <option value="">--Select Blood Group--</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+
+            <label for="component">Component Required:</label>
+            <select id="component" name="component" required>
+              <option value="">--Select Component--</option>
+              <option value="Whole Blood">Whole Blood</option>
+              <option value="Plasma">Plasma</option>
+              <option value="Platelets">Platelets</option>
+              <option value="Red Cells">Red Cells</option>
+            </select>
+          </div>
+
+          <button type="submit">Search Availability</button>
+        </form>
+
+        <!-- Results Table -->
+        <div class="table-container">
+          <table id="bloodTable">
+            <thead>
+              <tr>
+                <th>Sr. No.</th>
+                <th>Blood Bank Name</th>
+                <th>Location</th>
+                <th>Contact</th>
+                <th>Blood Group</th>
+                <th>Component</th>
+                <th>Units Available</th>
+                <th>Last Updated</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="bloodTableBody">
+              <!-- Results will be populated here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile View Cards Container -->
+        <div id="bloodBankCards" class="blood-bank-cards">
+          <!-- Mobile cards will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Add custom JavaScript -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const stateSelect = document.getElementById("state");
+        const districtSelect = document.getElementById("district");
+        const bloodFilterForm = document.getElementById("bloodFilterForm");
+        const loadingSpinner = document.getElementById("loadingSpinner");
+        const errorMessage = document.getElementById("errorMessage");
+        const successMessage = document.getElementById("successMessage");
+        const bloodTableBody = document.getElementById("bloodTableBody");
+        const bloodBankCards = document.getElementById("bloodBankCards");
+
+        // Function to show loading spinner
+        function showLoading() {
+          loadingSpinner.style.display = "flex";
+        }
+
+        // Function to hide loading spinner
+        function hideLoading() {
+          loadingSpinner.style.display = "none";
+        }
+
+        // Function to show error message
+        function showError(message) {
+          errorMessage.textContent = message;
+          errorMessage.style.display = "block";
+          successMessage.style.display = "none";
+        }
+
+        // Function to show success message
+        function showSuccess(message) {
+          successMessage.textContent = message;
+          successMessage.style.display = "block";
+          errorMessage.style.display = "none";
+        }
+
+        // Function to clear messages
+        function clearMessages() {
+          errorMessage.style.display = "none";
+          successMessage.style.display = "none";
+        }
+
+        // Function to update districts when state is selected
+        stateSelect.addEventListener("change", async function () {
+          const stateId = this.value;
+          districtSelect.innerHTML =
+            '<option value="">--Select District--</option>';
+
+          if (!stateId) {
+            return;
+          }
+
+          showLoading();
+          try {
+            const response = await fetch(
+              `/accounts/get-districts/${stateId}/`,
+              {
+                method: "GET",
+                headers: {
+                  "X-Requested-With": "XMLHttpRequest",
+                  "X-CSRFToken": document.querySelector(
+                    "[name=csrfmiddlewaretoken]"
+                  ).value,
+                },
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            const districts = await response.json();
+
+            if (!Array.isArray(districts)) {
+              throw new Error("Invalid response format");
+            }
+
+            districts.forEach((district) => {
+              const option = document.createElement("option");
+              option.value = district.id;
+              option.textContent = district.name;
+              districtSelect.appendChild(option);
+            });
+          } catch (error) {
+            console.error("Error loading districts:", error);
+            showError("Failed to load districts. Please try again.");
+            districtSelect.innerHTML =
+              '<option value="">Error loading districts</option>';
+          } finally {
+            hideLoading();
+          }
+        });
+
+        // Function to create stock status element
+        function createStockStatus(level) {
+          const status = document.createElement("span");
+          status.classList.add("stock-status");
+
+          if (level > 70) {
+            status.classList.add("stock-high");
+            status.textContent = "High";
+          } else if (level > 30) {
+            status.classList.add("stock-medium");
+            status.textContent = "Medium";
+          } else {
+            status.classList.add("stock-low");
+            status.textContent = "Low";
+          }
+
+          return status;
+        }
+
+        // Function to handle form submission
+        bloodFilterForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          clearMessages();
+          showLoading();
+
+          try {
+            const formData = new FormData(this);
+            const response = await fetch(this.action, {
+              method: "POST",
+              body: formData,
+              headers: {
+                "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+              },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              throw new Error(
+                data.error || "Failed to fetch blood availability data"
+              );
+            }
+
+            // Clear existing results
+            bloodTableBody.innerHTML = "";
+            bloodBankCards.innerHTML = "";
+
+            if (data.length === 0) {
+              showError("No blood banks found matching your criteria.");
+              return;
+            }
+
+            // Populate table and cards
+            data.forEach((bank, index) => {
+              // Create table row
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${bank.name}</td>
+                <td>${bank.location}</td>
+                <td>${bank.contact}</td>
+                <td>${bank.blood_group}</td>
+                <td>${bank.component}</td>
+                <td>${bank.units_available} units</td>
+                <td>${bank.last_updated}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="window.location.href='/blood-bank/${
+                    bank.id
+                  }'">
+                    View Details
+                  </button>
+                </td>
+              `;
+              bloodTableBody.appendChild(row);
+
+              // Create mobile card
+              const card = document.createElement("div");
+              card.className = "blood-bank-card";
+              card.innerHTML = `
+                <h3>${bank.name}</h3>
+                <div class="blood-bank-info">Location: ${bank.location}</div>
+                <div class="blood-bank-info">Contact: ${bank.contact}</div>
+                <div class="blood-bank-info">Blood Group: ${bank.blood_group}</div>
+                <div class="blood-bank-info">Component: ${bank.component}</div>
+                <div class="blood-bank-info">Units Available: ${bank.units_available}</div>
+                <div class="blood-bank-info">Last Updated: ${bank.last_updated}</div>
+                <button class="btn btn-primary mt-2" onclick="window.location.href='/blood-bank/${bank.id}'">
+                  View Details
+                </button>
+              `;
+              bloodBankCards.appendChild(card);
+            });
+
+            showSuccess(
+              `Found ${data.length} blood banks matching your criteria.`
+            );
+          } catch (error) {
+            showError(error.message);
+          } finally {
+            hideLoading();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

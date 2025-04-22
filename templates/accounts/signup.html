@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Jeevandayani</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'auth-styles.css' %}" />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .signup-container {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        margin: 1rem;
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo h1 {
+        color: #e63946;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .logo p {
+        color: #1d3557;
+        font-size: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        color: #1d3557;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-control {
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #e63946;
+        box-shadow: 0 0 0 0.2rem rgba(230, 57, 70, 0.25);
+      }
+
+      .btn-signup {
+        background-color: #e63946;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: none;
+        width: 100%;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn-signup:hover {
+        background-color: #752bd6;
+        transform: translateY(-2px);
+      }
+
+      .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #1d3557;
+      }
+
+      .login-link a {
+        color: #e63946;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+
+      .back-link {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        color: #1d3557;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+      }
+
+      .back-link:hover {
+        color: #e63946;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 576px) {
+        .form-row {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+
+      /* Add styles for form errors */
+      .alert-danger {
+        background-color: #ffe8e8;
+        border-color: #e63946;
+        color: #e63946;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .alert-danger p {
+        margin: 0;
+        padding: 0.25rem 0;
+      }
+
+      /* Style for select elements */
+      select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="{% url 'login' %}" class="back-link"> ← Back to Login </a>
+
+    <div class="signup-container">
+      <div class="logo">
+        <h1>Jeevandayani</h1>
+        <p>Create your account to start saving lives.</p>
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          <div class="form-group">
+            <label for="id_first_name" class="form-label">First Name</label>
+            {{ form.first_name }}
+          </div>
+
+          <div class="form-group">
+            <label for="id_last_name" class="form-label">Last Name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="id_email" class="form-label">Email address</label>
+          {{ form.email }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_username" class="form-label">Username</label>
+          {{ form.username }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_blood_group" class="form-label">Blood Type</label>
+          {{ form.blood_group }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password1" class="form-label">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.help_text %}
+          <small class="form-text text-muted">{{ form.password1.help_text|safe }}</small>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password2" class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger">
+          {% for field in form %} 
+            {% for error in field.errors %}
+              <p>{{ error }}</p>
+            {% endfor %} 
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn-signup">Create Account</button>
+
+        <div class="login-link">
+          Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+      </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

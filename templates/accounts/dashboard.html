@@ -1,0 +1,765 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Donation</title>
+  <!-- Add Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-logo img {
+      height: 50px;
+      width: auto;
+      margin-right: 1rem;
+      display: block;
+      object-fit: contain;
+    }
+
+    .navbar-logo h4 {
+      color: #e63946;
+      font-weight: 600;
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .navbar-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .navbar a {
+      color: #1d3557;
+      text-decoration: none;
+      padding: 0.7rem 1.2rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .navbar a:hover {
+      background-color: rgba(230, 57, 70, 0.1);
+      color: #e63946;
+      transform: translateY(-2px);
+    }
+
+    .navbar a.active {
+      background-color: #e63946;
+      color: white;
+    }
+
+    .navbar a.active:hover {
+      background-color: #d12f3c;
+      color: white;
+    }
+
+    .navbar-btn {
+      background-color: #e63946;
+      color: white !important;
+      padding: 0.7rem 1.5rem !important;
+      border-radius: 50px !important;
+      font-weight: 600 !important;
+      box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+    }
+
+    .navbar-btn:hover {
+      background-color: #d12f3c !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+    }
+
+    .navbar-toggler {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #1d3557;
+      cursor: pointer;
+    }
+
+    @media (max-width: 992px) {
+      .navbar {
+        padding: 1rem;
+      }
+
+      .navbar-toggler {
+        display: block;
+      }
+
+      .navbar-links {
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      }
+
+      .navbar-links.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .navbar a {
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        border-radius: 8px;
+      }
+    }
+
+    /* Carousel styling */
+    .carousel {
+      margin-bottom: 20px;
+    }
+
+    /* Base carousel item */
+    .carousel-item {
+      width: 100%;
+    }
+
+    /* Custom height for first slide */
+    .slide-1 {
+      height: 500px;
+    }
+
+    /* Custom height for second slide */
+    .slide-2 {
+      height: 500px;
+    }
+
+    /* Custom height for third slide */
+    .slide-3 {
+      height: 550px;
+    }
+
+    /* Base image styling */
+    .carousel-item img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Custom width for first slide image */
+    .img-slide-1 {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    /* Custom width for second slide image */
+    .img-slide-2 {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Custom width for third slide image */
+    .img-slide-3 {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* Enhanced carousel caption styling - centered horizontally */
+    .carousel-caption {
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 12px;
+      padding: 15px 30px;
+      width: 80%;
+      margin: 0 auto;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .carousel-caption h5 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #333333;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+      position: relative;
+      display: inline-block;
+      margin-right: 0;
+    }
+
+    .carousel-caption h5:after {
+      display: none;
+    }
+
+    .carousel-caption p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0;
+      color: #444444;
+      font-weight: 400;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+      text-align: center;
+    }
+
+    /* Media query for mobile responsiveness */
+    @media (max-width: 768px) {
+      .carousel-caption {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+      }
+
+      .carousel-caption h5 {
+        margin-right: 0;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .carousel-caption p {
+        text-align: center;
+      }
+    }
+
+    /* Enhanced main content styling */
+    .main-content {
+      padding: 4rem 0;
+      background: linear-gradient(135deg,
+          #fff5f5,
+          #ffe8e8);
+      /* Changed to match donation types section */
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 0 0 10px 10px;
+      margin: 0 auto 2rem;
+      max-width: 1200px;
+    }
+
+    .main-content h1 {
+      color: #e63946;
+      font-size: 3.2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: inline-block;
+    }
+
+    .main-content h1:after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: #e63946;
+      border-radius: 2px;
+    }
+
+    .main-content p {
+      color: #1d3557;
+      font-size: 1.5rem;
+      max-width: 700px;
+      margin: 2rem auto 1rem;
+      line-height: 1.8;
+      font-weight: 400;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .action-buttons {
+      margin-top: 2.5rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      background-color: #e63946;
+      color: white;
+      font-weight: 600;
+      padding: 12px 30px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3);
+      transition: all 0.3s ease;
+      margin: 0 10px 10px 10px;
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background-color: #752bd6;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(230, 57, 70, 0.4);
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .highlight-stats {
+      display: flex;
+      justify-content: center;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 0 15px 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
+      flex: 1;
+      max-width: 300px;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #e63946;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-desc {
+      color: #1d3557;
+      font-size: 1rem;
+    }
+
+    /* Mobile responsive buttons */
+    @media (max-width: 768px) {
+      .action-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn-action {
+        width: 80%;
+        margin-bottom: 15px;
+      }
+    }
+
+    /* Blood Compatibility Chart Styling */
+    .compatibility-section {
+      padding: 4rem 0;
+      background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin: 2rem auto;
+      max-width: 1200px;
+      border-radius: 10px;
+    }
+
+    .compatibility-section h2 {
+      color: #e63946;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+      text-align: center;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      position: relative;
+      display: inline-block;
+    }
+
+    .compatibility-section h2:after {
+      content: "";
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #e63946;
+      border-radius: 2px;
+    }
+
+    .compatibility-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+    }
+
+    .compatibility-img {
+      flex: 1;
+      max-width: 45%;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .compatibility-img img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .compatibility-text {
+      flex: 1;
+      max-width: 50%;
+      padding: 1rem 2rem;
+    }
+
+    .compatibility-text h3 {
+      color: #1d3557;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .compatibility-text p {
+      color: #1d3557;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .compatibility-text ul {
+      color: #1d3557;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-left: 1.5rem;
+    }
+
+    .compatibility-text ul li {
+      margin-bottom: 0.8rem;
+    }
+
+    /* Mobile responsive compatibility section */
+    @media (max-width: 768px) {
+      .compatibility-content {
+        flex-direction: column;
+        padding: 0 1rem;
+      }
+
+      .compatibility-img,
+      .compatibility-text {
+        max-width: 100%;
+        padding: 1rem;
+      }
+    }
+
+    .floating-chat-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #e63946, #ff4d4d);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .floating-chat-btn i {
+      font-size: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .floating-chat-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+      color: white;
+    }
+
+    .floating-chat-btn:hover i {
+      transform: scale(1.1);
+    }
+
+    .floating-chat-btn .tooltip {
+      position: absolute;
+      right: 75px;
+      background: #333;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .floating-chat-btn:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Add a pulse animation to make the button more noticeable */
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+      }
+
+      50% {
+        box-shadow: 0 4px 25px rgba(230, 57, 70, 0.5);
+      }
+
+      100% {
+        box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+      }
+    }
+
+    .floating-chat-btn {
+      animation: pulse 2s infinite;
+    }
+
+    /* Stop animation on hover */
+    .floating-chat-btn:hover {
+      animation: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="navbar-logo">
+      <img src="{% static 'images/logo.jpeg' %}" alt="Jeevandayani Logo" />
+      <h4>Jeevandayini</h4>
+    </div>
+    <button class="navbar-toggler" id="navbarToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="navbar-links" id="navbarLinks">
+      <a href="{% url 'about' %}"><i class="fas fa-info-circle"></i> ABOUT US</a>
+      {% if user.is_authenticated %}
+      <a href="{% url 'blood_availability' %}"><i class="fas fa-search"></i> LOOKING FOR BLOOD</a>
+      <a href="{% url 'type_donation' %}"><i class="fas fa-tint"></i> WANT TO DONATE BLOOD</a>
+      {% if user.is_staff %}
+      <a href="{% url 'blood_bank_login' %}" class="navbar-btn"><i class="fas fa-hospital-user"></i> BLOOD BANK
+        LOGIN</a>
+      {% endif %}
+      <a href="{% url 'logout' %}" class="navbar-btn"><i class="fas fa-sign-out-alt"></i> LOGOUT</a>
+      {% else %}
+      <a href="{% url 'login' %}" class="navbar-btn"><i class="fas fa-sign-in-alt"></i> LOGIN</a>
+      <a href="{% url 'signup' %}" class="navbar-btn"><i class="fas fa-user-plus"></i> SIGN UP</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+        aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+        aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active slide-1">
+        <img src="{% static 'images/blood donation.JPG' %}" class="d-block img-slide-1" alt="Blood donation image" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Save Lives by Donating Blood</h5>
+          <p>
+            Your donation can help someone in critical need. One donation can
+            save up to three lives.
+          </p>
+        </div>
+      </div>
+      <div class="carousel-item slide-2">
+        <img src="{% static 'images/feat_unionquay.jpg' %}" class="d-block img-slide-2" alt="Blood bank image" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Join Our Donor Community</h5>
+          <p>
+            Become a regular donor and be part of a life-saving community
+            effort.
+          </p>
+        </div>
+      </div>
+      <div class="carousel-item slide-3">
+        <img src="{% static 'images/file.png.webp' %}" class="d-block img-slide-3" alt="Blood donation process" />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Find Blood When You Need It</h5>
+          <p>
+            Our network connects patients with available blood supplies
+            quickly and efficiently.
+          </p>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <div class="main-content">
+    <div class="container">
+      <h1>Welcome to Jeevandayini</h1>
+      <p>Every drop of blood counts. Your donation can save lives.</p>
+
+      <div class="action-buttons">
+        {% if user.is_authenticated %}
+        <a href="{% url 'type_donation' %}" class="btn-action">Donate Now</a>
+        <a href="{% url 'blood_availability' %}" class="btn-action">Looking for Blood</a>
+        {% if user.is_staff %}
+        <a href="{% url 'blood_bank_login' %}" class="btn-action">Blood Bank Login</a>
+        {% endif %}
+        <a href="{% url 'logout' %}" class="btn-action">Logout</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="btn-action">Login</a>
+        <a href="{% url 'signup' %}" class="btn-action">Sign Up</a>
+        {% endif %}
+      </div>
+
+      <div class="highlight-stats">
+        <div class="stat-box">
+          <div class="stat-number">3</div>
+          <div class="stat-desc">Lives saved with each donation</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">28%</div>
+          <div class="stat-desc">
+            Of the India's population eligible to donate
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">6.57M liters</div>
+          <div class="stat-desc">Indians need blood annually</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blood Compatibility Chart Section -->
+  <div class="compatibility-section">
+    <div class="container">
+      <h2>Blood Type Compatibility Chart</h2>
+      <div class="compatibility-content">
+        <div class="compatibility-img">
+          <img src="{% static 'images/DonorRecipient-Chart_1.jpeg' %}" alt="Blood Compatibility Chart" />
+        </div>
+        <div class="compatibility-text">
+          <h3>Understanding Blood Type Compatibility</h3>
+          <p>
+            Blood type compatibility is crucial for safe blood transfusions.
+            The chart shows which blood types can donate to and receive from
+            other types:
+          </p>
+          <ul>
+            <li>Type O- is the universal donor</li>
+            <li>Type AB+ is the universal recipient</li>
+            <li>Most common blood type is O+</li>
+            <li>Rarest blood type is AB-</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Add button below the chart -->
+      <div style="text-align: center; margin-top: 2rem">
+        <a href="{% url 'blood_donation_types' %}" class="btn-action" style="
+              display: inline-block;
+              padding: 15px 30px;
+              background: linear-gradient(135deg, #e63946, #ff4d4d);
+              color: white;
+              text-decoration: none;
+              border-radius: 50px;
+              font-weight: 600;
+              font-size: 1.1rem;
+              box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+              transition: all 0.3s ease;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            "
+          onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(230, 57, 70, 0.4)'; this.style.background='linear-gradient(135deg, #ff4d4d, #e63946)';"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(230, 57, 70, 0.3)'; this.style.background='linear-gradient(135deg, #e63946, #ff4d4d)';">Learn
+          About Types of Donations</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Bootstrap JavaScript and its dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Navbar toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navbarToggle = document.getElementById('navbarToggle');
+      const navbarLinks = document.getElementById('navbarLinks');
+
+      navbarToggle.addEventListener('click', function () {
+        navbarLinks.classList.toggle('active');
+        if (navbarLinks.classList.contains('active')) {
+          navbarToggle.innerHTML = '<i class="fas fa-times"></i>';
+        } else {
+          navbarToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+      });
+    });
+  </script>
+
+  <!-- Floating Chat Button -->
+  <a href="{% url 'chatbot' %}" class="floating-chat-btn" title="Ask AI Assistant">
+    <i class="fas fa-robot"></i>
+    <span class="tooltip">Ask AI Assistant</span>
+  </a>
+</body>
+
+</html>

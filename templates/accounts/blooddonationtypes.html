@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Donation Types</title>
+    {% load static %}
+    <!-- Add Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="{% static 'css/donation-types.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Types of Donations Section with YouTube Video -->
+    <div class="donation-types-section">
+      <div class="container">
+        <div class="donation-types-content">
+          <div class="donation-types-text">
+            <h2 class="donation-types-title">TYPES OF DONATIONS</h2>
+            <p>
+              There are four ways to donate: plasma, platelets, red cells, and
+              whole blood. Those different components in our blood have many
+              uses. During and after a donation, we are able to separate those
+              components, to give a recipient exactly what they need.
+            </p>
+
+            <p>
+              Keep in mind, the process can vary based on the type of donation.
+              Eligibility varies too. We require certain qualifications to give
+              plasma and platelets, compared to red cells and whole blood. Ask
+              your phlebotomist what you're eligible to donate.
+            </p>
+          </div>
+
+          <div class="donation-types-video">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/0dUYU9l4gz8"
+              title="Blood Donation Types"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Donation Types Details -->
+    <div class="donation-types-details">
+      <div class="container">
+        <div class="row">
+          <!-- Whole Blood Section -->
+          <div class="col-md-6 donation-type-card">
+            <div class="type-icon">
+              <img
+                src="{% static 'images/wholeblood.png' %}"
+                alt="Whole Blood Donation"
+                class="img-fluid type-icon-img"
+              />
+            </div>
+            <h3 class="type-title">Whole Blood</h3>
+            <p class="type-description">
+              Whole blood donation is the most common and traditional method. A
+              pint of blood is drawn that contains red and white cells,
+              platelets, and plasma. It's mainly used for trauma and surgery.
+              Shelf life is 21-35 days, and
+              <span class="highlight">you can donate every 56 days</span>. This
+              is the quickest and easiest donation.
+            </p>
+          </div>
+
+          <!-- Platelets Section -->
+          <div class="col-md-6 donation-type-card">
+            <div class="type-icon">
+              <img
+                src="{% static 'images/platelates.png' %}"
+                alt="Platelets Donation"
+                class="img-fluid type-icon-img"
+              />
+            </div>
+            <h3 class="type-title">Platelets</h3>
+            <p class="type-description">
+              Platelets are small cell fragments in the blood that help stop or
+              prevent bleeding. They are made in our bone marrow, and their
+              shelf life is only 5 days! They are used for surgeries,
+              transplants, and to help cancer patients undergoing chemotherapy.
+              <span class="highlight">You can donate every seven days</span>.
+            </p>
+          </div>
+
+          <!-- Plasma Section -->
+          <div class="col-md-6 donation-type-card">
+            <div class="type-icon">
+              <img
+                src="{% static 'images/plasma.png' %}"
+                alt="Plasma Donation"
+                class="img-fluid type-icon-img"
+              />
+            </div>
+            <h3 class="type-title">Plasma</h3>
+            <p class="type-description">
+              Plasma is the liquid part of blood that carries nutrients,
+              hormones, and proteins. It is used to treat patients with blood
+              disorders, burns, and immune deficiencies. Plasma donations can be
+              made more frequently than whole blood.
+              <span class="highlight">You can donate every 28 days</span>.
+            </p>
+          </div>
+
+          <!-- Red Cells Section -->
+          <div class="col-md-6 donation-type-card">
+            <div class="type-icon">
+              <img
+                src="{% static 'images/redbloodcelss.png' %}"
+                alt="Red Cells Donation"
+                class="img-fluid type-icon-img"
+              />
+            </div>
+            <h3 class="type-title">Red Cells</h3>
+            <p class="type-description">
+              Red blood cells are crucial for carrying oxygen throughout the
+              body. This donation is especially needed for trauma victims,
+              surgery patients, and those with severe anemia. Red blood cells
+              have a longer shelf life compared to whole blood.
+              <span class="highlight">You can donate every 112 days</span>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Bootstrap JavaScript and its dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

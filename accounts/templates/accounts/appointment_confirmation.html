@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment Confirmed - Jeevandayini</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .confirmation-card {
+        max-width: 600px;
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .success-icon {
+        font-size: 5rem;
+        color: #28a745;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        color: #1d3557;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+      }
+      p {
+        color: #495057;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+      }
+      .btn-primary {
+        background-color: #1d3557;
+        border-color: #1d3557;
+        padding: 0.7rem 1.5rem;
+        font-weight: 500;
+        border-radius: 8px;
+      }
+      .btn-primary:hover {
+        background-color: #152a45;
+        border-color: #152a45;
+      }
+      .steps {
+        margin-top: 2rem;
+        padding: 0;
+      }
+      .steps li {
+        list-style: none;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+      }
+      .step-number {
+        width: 30px;
+        height: 30px;
+        background-color: #e63946;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="confirmation-card text-center">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+
+        <h1>Appointment Scheduled Successfully!</h1>
+
+        <p>
+          Thank you for scheduling your blood donation appointment. Your
+          contribution will help save lives!
+        </p>
+
+        <div class="alert alert-info mb-4">
+          {% if appointment %}
+          <h5 class="mb-3">Appointment Details:</h5>
+          <div class="card p-3 mb-3 text-start">
+            <p><strong>Name:</strong> {{ appointment.full_name }}</p>
+            <p>
+              <strong>Blood Bank:</strong> {{ appointment.blood_bank_name }}
+            </p>
+            <p><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+            <p><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+            <p><strong>Blood Group:</strong> {{ appointment.blood_group }}</p>
+          </div>
+          <strong>Important:</strong> Please remember to bring a valid photo ID
+          when you visit the blood bank. {% else %}
+          <strong>Important:</strong> Please remember to bring a valid photo ID
+          when you visit the blood bank. {% endif %}
+        </div>
+
+        <h5 class="text-start mb-3">What happens next?</h5>
+        <ul class="steps text-start">
+          <li>
+            <div class="step-number">1</div>
+            <div>The blood bank will review your appointment.</div>
+          </li>
+          <li>
+            <div class="step-number">2</div>
+            <div>You'll receive a confirmation via email or phone.</div>
+          </li>
+          <li>
+            <div class="step-number">3</div>
+            <div>Visit the blood bank at your scheduled time.</div>
+          </li>
+        </ul>
+
+        <div class="mt-4">
+          <a href="{% url 'dashboard' %}" class="btn btn-primary">
+            <i class="fas fa-home me-2"></i>Return to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

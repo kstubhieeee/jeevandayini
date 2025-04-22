@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Registered Appointments</h2>
+
+  {% if appointments %}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Blood Group</th>
+          <th>Contact</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+        <tr>
+          <td>{{ appointment.full_name }}</td>
+          <td>{{ appointment.appointment_date }}</td>
+          <td>{{ appointment.appointment_time }}</td>
+          <td>{{ appointment.blood_group }}</td>
+          <td>{{ appointment.phone_number }}</td>
+          <td>{{ appointment.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">No appointments found.</div>
+  {% endif %}
+
+  <a href="{% url 'blood_bank_dashboard' %}" class="btn btn-primary mt-3"
+    >Back to Dashboard</a
+  >
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Receiver Login - Jeevandayani</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'auth-styles.css' %}" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="auth-box">
+        <div class="auth-content">
+          <div class="auth-form-section">
+            <h2>Receiver Login</h2>
+            {% if messages %} {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %} {% endif %}
+            <form method="POST" class="auth-form">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required />
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required />
+              </div>
+              <button type="submit" class="auth-button">Login</button>
+            </form>
+            <div class="auth-links">
+              <p>
+                Don't have an account? <a href="{% url 'signup' %}">Sign up</a>
+              </p>
+              <p>
+                <a href="{% url 'dashboard' %}">← Back to Home</a>
+              </p>
+            </div>
+          </div>
+          <div class="auth-image">
+            <img
+              src="{% static 'images/reciever.jpeg' %}"
+              alt="Receiver Image"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
